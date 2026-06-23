@@ -77,6 +77,11 @@
     <string name="contact_number">Phone Number</string>
     <string name="contact_type">Type</string>
 
+    <!-- Profile -->
+    <string name="edit_profile">Edit Profile</string>
+    <string name="edit_profile_subtitle">Update your details</string>
+    <string name="flat_type">Flat Type</string>
+
     <!-- Common -->
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>

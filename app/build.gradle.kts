@@ -1,7 +1,22 @@
+import java.io.ByteArrayOutputStream
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
+}
+
+// versionCode auto-increments with every commit so each build is uniquely
+// versioned without manually bumping a number (falls back to 1 if git is unavailable).
+fun gitCommitCount(): Int = try {
+    val out = ByteArrayOutputStream()
+    exec {
+        commandLine("git", "rev-list", "--count", "HEAD")
+        standardOutput = out
+    }
+    out.toString().trim().toInt()
+} catch (e: Exception) {
+    1
 }
 
 android {
@@ -12,7 +27,7 @@ android {
         applicationId = "com.societyconnect"
         minSdk = 26
         targetSdk = 34
-        versionCode = 1
+        versionCode = gitCommitCount()
         versionName = "1.0.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.societyconnect.data.models.*
 import kotlinx.coroutines.CoroutineScope
@@ -36,6 +37,29 @@ abstract class AppDatabase : RoomDatabase() {
     companion object {
         @Volatile private var INSTANCE: AppDatabase? = null
 
+        // v1 -> v2: bulk-maintenance feature added flatType to users and a new recurring_config table.
+        val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE users ADD COLUMN flatType TEXT NOT NULL DEFAULT '1BHK'")
+                db.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS recurring_config (
+                        id INTEGER NOT NULL PRIMARY KEY,
+                        isEnabled INTEGER NOT NULL,
+                        mode TEXT NOT NULL,
+                        sameAmount REAL NOT NULL,
+                        amount1BHK REAL NOT NULL,
+                        amount2BHK REAL NOT NULL,
+                        amount3BHK REAL NOT NULL,
+                        amountShop REAL NOT NULL,
+                        dueDay INTEGER NOT NULL,
+                        lastGeneratedMonth TEXT NOT NULL
+                    )
+                    """.trimIndent()
+                )
+            }
+        }
+
         fun getInstance(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 Room.databaseBuilder(
@@ -57,7 +81,7 @@ abstract class AppDatabase : RoomDatabase() {
                             }
                         }
                     })
-                    .fallbackToDestructiveMigration()
+                    .addMigrations(MIGRATION_1_2)
                     .build()
                     .also { INSTANCE = it }
             }

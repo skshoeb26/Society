@@ -38,6 +38,10 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
+        <activity
+            android:name=".ui.profile.EditProfileActivity"
+            android:exported="false" />
+
         <receiver
             android:name=".utils.ReminderReceiver"
             android:exported="false">

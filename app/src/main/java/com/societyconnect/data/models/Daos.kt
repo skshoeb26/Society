@@ -22,6 +22,9 @@ interface UserDao {
     @Query("SELECT * FROM users WHERE role = 'RESIDENT' ORDER BY flatNo ASC")
     suspend fun getAllResidentsList(): List<User>
 
+    @Update
+    suspend fun update(user: User)
+
     @Delete
     suspend fun delete(user: User)
 }

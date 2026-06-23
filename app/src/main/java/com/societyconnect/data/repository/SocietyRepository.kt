@@ -13,6 +13,7 @@ class SocietyRepository(context: Context) {
     suspend fun loginUser(phone: String, password: String) = db.userDao().login(phone, password)
     suspend fun getUserById(id: Int) = db.userDao().getById(id)
     suspend fun getAllResidentsList() = db.userDao().getAllResidentsList()
+    suspend fun updateProfile(user: User) = db.userDao().update(user)
 
     // Maintenance
     val allMaintenance = db.maintenanceDao().getAll()

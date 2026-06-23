@@ -14,6 +14,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.societyconnect.R
 import com.societyconnect.databinding.ActivityMainBinding
 import com.societyconnect.ui.auth.LoginActivity
+import com.societyconnect.ui.profile.EditProfileActivity
 import com.societyconnect.utils.SessionManager
 
 class MainActivity : AppCompatActivity() {
@@ -74,6 +75,10 @@ class MainActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.action_emergency -> {
                 navController.navigate(R.id.emergencyFragment)
+                true
+            }
+            R.id.action_edit_profile -> {
+                startActivity(Intent(this, EditProfileActivity::class.java))
                 true
             }
             R.id.action_logout -> {
