@@ -13,3 +13,8 @@ captures/
 *.dex
 /app/release/
 /app/debug/
+
+# Signing keystores must never be committed; CI reads them from secrets.
+*.jks
+*.keystore
+release.jks
