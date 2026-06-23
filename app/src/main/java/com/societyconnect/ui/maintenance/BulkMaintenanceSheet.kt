@@ -92,7 +92,7 @@ class BulkMaintenanceSheet : BottomSheetDialogFragment() {
 
         // Result observer
         viewModel.bulkResult.observe(viewLifecycleOwner) { msg ->
-            toast(msg)
+            requireContext().toast(msg)
             if (msg.startsWith("✅")) dismiss()
         }
 
@@ -116,7 +116,7 @@ class BulkMaintenanceSheet : BottomSheetDialogFragment() {
 
     private fun generate() {
         val month = binding.etMonth.text.toString().trim()
-        if (month.isEmpty()) { toast("Month likho"); return }
+        if (month.isEmpty()) { requireContext().toast("Month likho"); return }
         if (selectedDueDate == 0L) {
             // Default: is mahine ki 10th
             val cal = Calendar.getInstance()
@@ -129,14 +129,14 @@ class BulkMaintenanceSheet : BottomSheetDialogFragment() {
 
         if (mode == "SAME") {
             sameAmount = binding.etSameAmount.text.toString().toDoubleOrNull() ?: 0.0
-            if (sameAmount <= 0) { toast("Sahi amount daalo"); return }
+            if (sameAmount <= 0) { requireContext().toast("Sahi amount daalo"); return }
         } else {
             sizeAmounts["1BHK"] = binding.etAmount1BHK.text.toString().toDoubleOrNull() ?: 0.0
             sizeAmounts["2BHK"] = binding.etAmount2BHK.text.toString().toDoubleOrNull() ?: 0.0
             sizeAmounts["3BHK"] = binding.etAmount3BHK.text.toString().toDoubleOrNull() ?: 0.0
             sizeAmounts["SHOP"] = binding.etAmountShop.text.toString().toDoubleOrNull() ?: 0.0
             if (sizeAmounts.values.all { it <= 0 }) {
-                toast("Kam se kam ek size ka amount daalo"); return
+                requireContext().toast("Kam se kam ek size ka amount daalo"); return
             }
         }
 
