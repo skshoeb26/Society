@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/dashboardFragment">
+
+    <fragment
+        android:id="@+id/dashboardFragment"
+        android:name="com.societyconnect.ui.dashboard.DashboardFragment"
+        android:label="Dashboard" />
+
+    <fragment
+        android:id="@+id/maintenanceFragment"
+        android:name="com.societyconnect.ui.maintenance.MaintenanceFragment"
+        android:label="Maintenance" />
+
+    <fragment
+        android:id="@+id/complaintsFragment"
+        android:name="com.societyconnect.ui.complaints.ComplaintsFragment"
+        android:label="Complaints" />
+
+    <fragment
+        android:id="@+id/noticesFragment"
+        android:name="com.societyconnect.ui.notices.NoticesFragment"
+        android:label="Notice Board" />
+
+    <fragment
+        android:id="@+id/visitorsFragment"
+        android:name="com.societyconnect.ui.visitors.VisitorsFragment"
+        android:label="Visitor Log" />
+
+    <fragment
+        android:id="@+id/emergencyFragment"
+        android:name="com.societyconnect.ui.emergency.EmergencyFragment"
+        android:label="Emergency Contacts" />
+
+</navigation>

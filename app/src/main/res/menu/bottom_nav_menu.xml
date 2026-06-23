@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/dashboardFragment"
+        android:icon="@drawable/ic_home"
+        android:title="Home" />
+
+    <item
+        android:id="@+id/maintenanceFragment"
+        android:icon="@drawable/ic_money"
+        android:title="Dues" />
+
+    <item
+        android:id="@+id/complaintsFragment"
+        android:icon="@drawable/ic_complaint"
+        android:title="Complaints" />
+
+    <item
+        android:id="@+id/noticesFragment"
+        android:icon="@drawable/ic_notice"
+        android:title="Notices" />
+
+    <item
+        android:id="@+id/visitorsFragment"
+        android:icon="@drawable/ic_visitor"
+        android:title="Visitors" />
+
+</menu>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:orientation="vertical" android:padding="20dp">
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:text="Update Complaint Status" android:textColor="@color/text_primary"
+        android:textSize="18sp" android:textStyle="bold" android:layout_marginBottom="8dp"/>
+    <TextView android:id="@+id/tvComplaintTitle" android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:text="Complaint title" android:textColor="@color/text_secondary"
+        android:textSize="14sp" android:layout_marginBottom="16dp"/>
+    <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:hint="Admin Comment (optional)" android:layout_marginBottom="16dp"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+        <com.google.android.material.textfield.TextInputEditText android:id="@+id/etAdminComment"
+            android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textMultiLine" android:minLines="2"/>
+    </com.google.android.material.textfield.TextInputLayout>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+        <com.google.android.material.button.MaterialButton android:id="@+id/btnOpen"
+            android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+            android:layout_marginEnd="4dp" android:text="Open" android:backgroundTint="@color/status_open"/>
+        <com.google.android.material.button.MaterialButton android:id="@+id/btnInProgress"
+            android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+            android:layout_marginHorizontal="4dp" android:text="In Progress" android:backgroundTint="@color/primary"/>
+        <com.google.android.material.button.MaterialButton android:id="@+id/btnResolved"
+            android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+            android:layout_marginStart="4dp" android:text="Resolved" android:backgroundTint="@color/status_resolved"/>
+    </LinearLayout>
+</LinearLayout>

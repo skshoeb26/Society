@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary Brand Colors -->
+    <color name="primary">#1565C0</color>
+    <color name="primary_dark">#0D47A1</color>
+    <color name="primary_light">#E3F2FD</color>
+    <color name="secondary">#FF6F00</color>
+    <color name="secondary_light">#FFF8E1</color>
+
+    <!-- Status Colors -->
+    <color name="status_paid">#2E7D32</color>
+    <color name="status_pending">#C62828</color>
+    <color name="status_open">#E65100</color>
+    <color name="status_in_progress">#1565C0</color>
+    <color name="status_resolved">#2E7D32</color>
+
+    <!-- Neutrals -->
+    <color name="white">#FFFFFF</color>
+    <color name="background">#F5F7FA</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="text_primary">#1A1A2E</color>
+    <color name="text_secondary">#6B7280</color>
+    <color name="divider">#E5E7EB</color>
+    <color name="card_shadow">#1A000000</color>
+
+    <!-- Dashboard Card Colors -->
+    <color name="card_maintenance">#1565C0</color>
+    <color name="card_complaints">#E65100</color>
+    <color name="card_notices">#2E7D32</color>
+    <color name="card_visitors">#6A1B9A</color>
+    <color name="card_emergency">#B71C1C</color>
+</resources>

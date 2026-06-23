@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:layout_marginHorizontal="16dp" android:layout_marginBottom="10dp"
+    app:cardCornerRadius="16dp" app:cardElevation="3dp" app:cardBackgroundColor="@color/white">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:padding="16dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:gravity="center_vertical">
+            <View android:id="@+id/tvStatusDot" android:layout_width="10dp" android:layout_height="10dp"
+                android:layout_marginEnd="8dp" android:background="@drawable/dot_green"/>
+            <TextView android:id="@+id/tvVisitorName" android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:text="John Doe" android:textColor="@color/text_primary"
+                android:textSize="16sp" android:textStyle="bold"/>
+            <TextView android:id="@+id/tvFlat" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Flat A-101" android:textColor="@color/primary" android:textSize="13sp" android:textStyle="bold"/>
+        </LinearLayout>
+        <TextView android:id="@+id/tvPurpose" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="Delivery" android:textColor="@color/text_secondary" android:textSize="13sp" android:layout_marginTop="4dp"/>
+        <TextView android:id="@+id/tvVehicle" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="🚗 MH01-AB-1234" android:textColor="@color/text_secondary" android:textSize="13sp" android:layout_marginTop="2dp"/>
+        <View android:layout_width="match_parent" android:layout_height="1dp"
+            android:background="@color/divider" android:layout_marginVertical="8dp"/>
+        <TextView android:id="@+id/tvCheckIn" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="In: 10 Jun 2024, 02:30 PM" android:textColor="@color/status_paid" android:textSize="12sp"/>
+        <TextView android:id="@+id/tvCheckOut" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="Out: 10 Jun 2024, 03:30 PM" android:textColor="@color/text_secondary" android:textSize="12sp" android:visibility="gone"/>
+        <com.google.android.material.button.MaterialButton android:id="@+id/btnCheckOut"
+            android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginTop="8dp"
+            android:text="Mark Check-Out" android:textSize="12sp" style="@style/Widget.Material3.Button.OutlinedButton"/>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
