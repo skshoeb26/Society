@@ -50,7 +50,6 @@ jobs:
           RELEASE_KEYSTORE_PATH: ${{ github.workspace }}/release.jks
           RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
           RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
-          RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
         run: |
           if [ -z "$RELEASE_KEYSTORE_BASE64" ]; then
             echo "RELEASE_KEYSTORE_BASE64 secret not set, skipping release AAB build."

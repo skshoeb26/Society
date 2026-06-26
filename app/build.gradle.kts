@@ -41,9 +41,12 @@ android {
         if (hasReleaseSigning) {
             create("release") {
                 storeFile = file(releaseKeystorePath!!)
+                // PKCS12 keystores (the keytool default since JDK 9) don't support a
+                // key password distinct from the store password - keytool silently
+                // ignores -keypass and uses storepass for both, so we mirror that here.
                 storePassword = System.getenv("RELEASE_KEYSTORE_PASSWORD")
                 keyAlias = System.getenv("RELEASE_KEY_ALIAS")
-                keyPassword = System.getenv("RELEASE_KEY_PASSWORD")
+                keyPassword = System.getenv("RELEASE_KEYSTORE_PASSWORD")
             }
         }
     }
