@@ -1,7 +1,7 @@
 package com.societyconnect.data.repository
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.map
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.societyconnect.data.firebase.AuthRepository
@@ -30,13 +30,13 @@ class SocietyRepository(private val societyId: String) {
                 .orderBy("dueDate", Query.Direction.ASCENDING)
         ) { it.toEntities(Maintenance::class.java) }
 
-    val totalCollected: LiveData<Double> = Transformations.map(allMaintenance) { list ->
+    val totalCollected: LiveData<Double> = allMaintenance.map { list ->
         list.filter { it.isPaid }.sumOf { it.amount }
     }
-    val totalPending: LiveData<Double> = Transformations.map(allMaintenance) { list ->
+    val totalPending: LiveData<Double> = allMaintenance.map { list ->
         list.filter { !it.isPaid }.sumOf { it.amount }
     }
-    val pendingCount: LiveData<Int> = Transformations.map(pendingMaintenance) { it.size }
+    val pendingCount: LiveData<Int> = pendingMaintenance.map { it.size }
 
     fun getMaintenanceByFlat(flatNo: String): LiveData<List<Maintenance>> =
         FirestoreQueryLiveData(
@@ -124,7 +124,7 @@ class SocietyRepository(private val societyId: String) {
             societyRef.collection("complaints").orderBy("createdAt", Query.Direction.DESCENDING)
         ) { it.toEntities(Complaint::class.java) }
 
-    val openComplaintsCount: LiveData<Int> = Transformations.map(allComplaints) { list ->
+    val openComplaintsCount: LiveData<Int> = allComplaints.map { list ->
         list.count { it.status == "OPEN" }
     }
 
@@ -176,11 +176,11 @@ class SocietyRepository(private val societyId: String) {
             societyRef.collection("visitors").orderBy("checkIn", Query.Direction.DESCENDING)
         ) { it.toEntities(Visitor::class.java) }
 
-    val activeVisitors: LiveData<List<Visitor>> = Transformations.map(allVisitors) { list ->
+    val activeVisitors: LiveData<List<Visitor>> = allVisitors.map { list ->
         list.filter { it.checkOut == null }
     }
 
-    val todayVisitorCount: LiveData<Int> = Transformations.map(allVisitors) { list ->
+    val todayVisitorCount: LiveData<Int> = allVisitors.map { list ->
         val startOfDay = Calendar.getInstance().apply {
             set(Calendar.HOUR_OF_DAY, 0)
             set(Calendar.MINUTE, 0)
@@ -210,7 +210,7 @@ class SocietyRepository(private val societyId: String) {
             it.toEntities(EmergencyContact::class.java)
         }
 
-    val allEmergencyContacts: LiveData<List<EmergencyContact>> = Transformations.map(emergencyContactsLive) { list ->
+    val allEmergencyContacts: LiveData<List<EmergencyContact>> = emergencyContactsLive.map { list ->
         list.sortedWith(compareByDescending<EmergencyContact> { it.isDefault }.thenBy { it.type })
     }
 
