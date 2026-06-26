@@ -21,6 +21,7 @@ import com.societyconnect.databinding.BottomSheetInviteGuestBinding
 import com.societyconnect.databinding.DialogVisitorQrBinding
 import com.societyconnect.databinding.ItemVisitorBinding
 import com.societyconnect.data.models.Visitor
+import com.societyconnect.data.models.withId
 import com.societyconnect.data.repository.SocietyRepository
 import com.societyconnect.utils.SessionManager
 import com.societyconnect.utils.generateQrBitmap
@@ -209,10 +210,10 @@ class VisitorsViewModel : ViewModel() {
     fun getByFlat(flat: String) = repo.getVisitorsByFlat(flat)
     fun addVisitor(v: Visitor) = viewModelScope.launch { repo.addVisitor(v) }
     fun checkOut(v: Visitor) = viewModelScope.launch {
-        repo.updateVisitor(v.copy(checkOut = System.currentTimeMillis()))
+        repo.updateVisitor(v.copy(checkOut = System.currentTimeMillis()).withId(v.id))
     }
-    fun approve(v: Visitor) = viewModelScope.launch { repo.updateVisitor(v.copy(status = "APPROVED")) }
-    fun deny(v: Visitor) = viewModelScope.launch { repo.updateVisitor(v.copy(status = "DENIED")) }
+    fun approve(v: Visitor) = viewModelScope.launch { repo.updateVisitor(v.copy(status = "APPROVED").withId(v.id)) }
+    fun deny(v: Visitor) = viewModelScope.launch { repo.updateVisitor(v.copy(status = "DENIED").withId(v.id)) }
 
     fun inviteGuest(v: Visitor, onCreated: (Visitor) -> Unit) = viewModelScope.launch {
         val newId = repo.addVisitor(v)
@@ -226,7 +227,7 @@ class VisitorsViewModel : ViewModel() {
             visitor.checkIn != null -> onResult("${visitor.visitorName} is already checked in")
             visitor.status != "APPROVED" -> onResult("This guest is not approved")
             else -> {
-                repo.updateVisitor(visitor.copy(checkIn = System.currentTimeMillis()))
+                repo.updateVisitor(visitor.copy(checkIn = System.currentTimeMillis()).withId(visitor.id))
                 onResult("Welcome ${visitor.visitorName}! Checked in for Flat ${visitor.visitingFlat}")
             }
         }

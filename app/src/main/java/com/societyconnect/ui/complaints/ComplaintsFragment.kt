@@ -11,6 +11,7 @@ import com.societyconnect.databinding.FragmentComplaintsBinding
 import com.societyconnect.databinding.BottomSheetAddComplaintBinding
 import com.societyconnect.databinding.BottomSheetUpdateStatusBinding
 import com.societyconnect.data.models.Complaint
+import com.societyconnect.data.models.withId
 import com.societyconnect.utils.SessionManager
 import com.societyconnect.utils.toast
 
@@ -126,7 +127,7 @@ class ComplaintsFragment : Fragment() {
     }
 
     private fun updateStatus(complaint: Complaint, status: String, comment: String, dialog: BottomSheetDialog) {
-        viewModel.updateComplaint(complaint.copy(status = status, adminComment = comment, updatedAt = System.currentTimeMillis()))
+        viewModel.updateComplaint(complaint.copy(status = status, adminComment = comment, updatedAt = System.currentTimeMillis()).withId(complaint.id))
         requireContext().toast("Status updated to $status")
         dialog.dismiss()
     }

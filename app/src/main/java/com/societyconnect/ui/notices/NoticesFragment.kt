@@ -16,6 +16,7 @@ import com.societyconnect.databinding.FragmentNoticesBinding
 import com.societyconnect.databinding.BottomSheetAddNoticeBinding
 import com.societyconnect.databinding.ItemNoticeBinding
 import com.societyconnect.data.models.Notice
+import com.societyconnect.data.models.withId
 import com.societyconnect.data.repository.SocietyRepository
 import com.societyconnect.utils.SessionManager
 import com.societyconnect.utils.toast
@@ -105,7 +106,7 @@ class NoticesViewModel : ViewModel() {
 
     val allNotices get() = repo.allNotices
     fun addNotice(n: Notice) = viewModelScope.launch { repo.addNotice(n) }
-    fun togglePin(n: Notice) = viewModelScope.launch { repo.updateNotice(n.copy(isPinned = !n.isPinned)) }
+    fun togglePin(n: Notice) = viewModelScope.launch { repo.updateNotice(n.copy(isPinned = !n.isPinned).withId(n.id)) }
     fun deleteNotice(n: Notice) = viewModelScope.launch { repo.deleteNotice(n) }
 }
 

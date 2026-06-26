@@ -8,6 +8,14 @@ interface FirestoreEntity {
     var id: String
 }
 
+// data class copy() only forwards primary-constructor parameters, so it can't preserve
+// id (declared in the class body to keep it out of equals/copy/serialization) — every
+// copy() silently resets id back to "". Chain this after copy() to carry it over.
+fun <T : FirestoreEntity> T.withId(id: String): T {
+    this.id = id
+    return this
+}
+
 // ─── MAINTENANCE BILL ─────────────────────────────────────────────────
 data class Maintenance(
     val flatNo: String = "",

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.societyconnect.data.models.Maintenance
 import com.societyconnect.data.models.RecurringConfig
+import com.societyconnect.data.models.withId
 import com.societyconnect.data.repository.SocietyRepository
 import kotlinx.coroutines.launch
 
@@ -29,7 +30,7 @@ class MaintenanceViewModel : ViewModel() {
             m.copy(
                 isPaid = !m.isPaid,
                 paidOn = if (!m.isPaid) System.currentTimeMillis() else null
-            )
+            ).withId(m.id)
         )
     }
 
