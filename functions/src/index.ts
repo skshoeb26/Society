@@ -1,9 +1,12 @@
 import { onCall, HttpsError } from "firebase-functions/v2/https";
+import { onDocumentCreated, onDocumentUpdated } from "firebase-functions/v2/firestore";
 import { initializeApp } from "firebase-admin/app";
 import { getFirestore, FieldValue } from "firebase-admin/firestore";
+import { getMessaging } from "firebase-admin/messaging";
 
 initializeApp();
 const db = getFirestore();
+const messaging = getMessaging();
 
 const VALID_FLAT_TYPES = ["1BHK", "2BHK", "3BHK", "SHOP"];
 const PLAN_DAYS: Record<string, number> = { MONTHLY: 30, YEARLY: 365 };
@@ -140,3 +143,122 @@ export const cancelSubscription = onCall(async (request) => {
   await db.collection("societies").doc(societyId).update({ subscriptionActive: false });
   return { ok: true };
 });
+
+// ─── PUSH NOTIFICATIONS ──────────────────────────────────────────────────
+
+async function sendToTokens(
+  tokens: (string | null | undefined)[],
+  title: string,
+  body: string,
+  data: Record<string, string>
+): Promise<void> {
+  const cleanTokens = Array.from(new Set(tokens.filter((t): t is string => !!t)));
+  if (cleanTokens.length === 0) return;
+  await messaging.sendEachForMulticast({
+    tokens: cleanTokens,
+    notification: { title, body },
+    data,
+  });
+}
+
+async function getTokensForSociety(
+  societyId: string,
+  roles?: string[]
+): Promise<(string | undefined)[]> {
+  const snap = await db.collection("users").where("societyId", "==", societyId).get();
+  return snap.docs
+    .filter((d) => !roles || roles.includes(d.data().role))
+    .map((d) => d.data().fcmToken as string | undefined);
+}
+
+async function getTokensForFlat(
+  societyId: string,
+  flatNo: string
+): Promise<(string | undefined)[]> {
+  const snap = await db.collection("users")
+    .where("societyId", "==", societyId)
+    .where("flatNo", "==", flatNo)
+    .get();
+  return snap.docs.map((d) => d.data().fcmToken as string | undefined);
+}
+
+async function getTokenForUser(uid: string): Promise<string | undefined> {
+  const snap = await db.collection("users").doc(uid).get();
+  return snap.data()?.fcmToken;
+}
+
+export const onNoticeCreated = onDocumentCreated(
+  "societies/{societyId}/notices/{noticeId}",
+  async (event) => {
+    const notice = event.data?.data();
+    if (!notice) return;
+    const societyId = event.params.societyId;
+    const tokens = await getTokensForSociety(societyId);
+    await sendToTokens(tokens, `📢 ${notice.title}`, notice.content, {
+      channel: "notices",
+      societyId,
+    });
+  }
+);
+
+export const onComplaintCreated = onDocumentCreated(
+  "societies/{societyId}/complaints/{complaintId}",
+  async (event) => {
+    const complaint = event.data?.data();
+    if (!complaint) return;
+    const societyId = event.params.societyId;
+    const tokens = await getTokensForSociety(societyId, ["ADMIN", "COMMITTEE"]);
+    await sendToTokens(
+      tokens,
+      `New complaint: ${complaint.title}`,
+      `${complaint.flatNo} · ${complaint.raisedBy}`,
+      { channel: "complaints", societyId }
+    );
+  }
+);
+
+export const onComplaintUpdated = onDocumentUpdated(
+  "societies/{societyId}/complaints/{complaintId}",
+  async (event) => {
+    const before = event.data?.before.data();
+    const after = event.data?.after.data();
+    if (!before || !after || before.status === after.status) return;
+
+    const token = await getTokenForUser(after.raisedByUid);
+    if (!token) return;
+    await sendToTokens([token], `Update on: ${after.title}`, `Status: ${after.status}`, {
+      channel: "complaints",
+      societyId: event.params.societyId,
+    });
+  }
+);
+
+export const onVisitorCreated = onDocumentCreated(
+  "societies/{societyId}/visitors/{visitorId}",
+  async (event) => {
+    const visitor = event.data?.data();
+    if (!visitor) return;
+    const societyId = event.params.societyId;
+    const tokens = await getTokensForFlat(societyId, visitor.visitingFlat);
+    await sendToTokens(
+      tokens,
+      "Visitor at the gate",
+      `${visitor.visitorName} is here to see Flat ${visitor.visitingFlat}`,
+      { channel: "visitors", societyId }
+    );
+  }
+);
+
+export const onMaintenanceBillCreated = onDocumentCreated(
+  "societies/{societyId}/maintenanceBills/{billId}",
+  async (event) => {
+    const bill = event.data?.data();
+    if (!bill) return;
+    const token = await getTokenForUser(bill.residentUid);
+    if (!token) return;
+    await sendToTokens([token], "New maintenance bill", `₹${bill.amount} due for ${bill.month}`, {
+      channel: "maintenance",
+      societyId: event.params.societyId,
+    });
+  }
+);

@@ -7,6 +7,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.functions.FirebaseFunctions
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.tasks.await
 
 class AuthRepository {
@@ -91,4 +92,10 @@ class AuthRepository {
     }
 
     fun societiesCollection(): CollectionReference = db.collection("societies")
+
+    suspend fun registerFcmToken() {
+        val uid = auth.currentUser?.uid ?: return
+        val token = FirebaseMessaging.getInstance().token.await()
+        db.collection("users").document(uid).update("fcmToken", token).await()
+    }
 }

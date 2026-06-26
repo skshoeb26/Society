@@ -39,6 +39,7 @@ class SplashActivity : AppCompatActivity() {
                         societyName = society?.name ?: "",
                         phone = profile.phone ?: ""
                     )
+                    runCatching { authRepo.registerFcmToken() }
                     Intent(this@SplashActivity, MainActivity::class.java)
                 }
             }

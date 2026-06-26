@@ -102,7 +102,7 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-    private fun finishOnboarding(societyId: String, societyName: String, role: String, flat: String) {
+    private suspend fun finishOnboarding(societyId: String, societyName: String, role: String, flat: String) {
         val account = authRepo.currentUser
         session.saveSession(
             userId = account?.uid ?: "",
@@ -113,6 +113,7 @@ class RegisterActivity : AppCompatActivity() {
             societyName = societyName,
             phone = ""
         )
+        runCatching { authRepo.registerFcmToken() }
         toast(
             if (role == SessionManager.ROLE_ADMIN) "Society created! Find your invite code under Invite Members."
             else "Welcome to $societyName!"
