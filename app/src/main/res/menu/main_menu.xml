@@ -9,6 +9,21 @@
         app:showAsAction="ifRoom" />
 
     <item
+        android:id="@+id/action_subscription"
+        android:title="@string/subscription"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_invite_members"
+        android:title="@string/invite_members"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_members"
+        android:title="@string/members"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_edit_profile"
         android:title="@string/edit_profile"
         app:showAsAction="never" />

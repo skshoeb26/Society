@@ -43,7 +43,7 @@ class NoticesFragment : Fragment() {
         viewModel.init(requireContext())
 
         adapter = NoticesAdapter(
-            isAdmin = session.isAdmin(),
+            isAdmin = session.canManageContent(),
             onPin = { viewModel.togglePin(it) },
             onDelete = { confirmDelete(it) }
         )
@@ -56,7 +56,7 @@ class NoticesFragment : Fragment() {
             binding.emptyState.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
         }
 
-        binding.fabAdd.visibility = if (session.isAdmin()) View.VISIBLE else View.GONE
+        binding.fabAdd.visibility = if (session.canManageContent()) View.VISIBLE else View.GONE
         binding.fabAdd.setOnClickListener { showAddSheet() }
     }
 

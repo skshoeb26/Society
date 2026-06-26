@@ -16,9 +16,10 @@ class SessionManager(context: Context) {
         const val KEY_PHONE = "phone"
         const val KEY_IS_LOGGED_IN = "is_logged_in"
 
-        const val ROLE_ADMIN = "ADMIN"
+        const val ROLE_ADMIN = "ADMIN"          // Secretary — owns the subscription, can invite members
         const val ROLE_RESIDENT = "RESIDENT"
         const val ROLE_SECURITY = "SECURITY"
+        const val ROLE_COMMITTEE = "COMMITTEE"
     }
 
     fun saveSession(userId: Int, name: String, flatNo: String, role: String, society: String, phone: String) {
@@ -45,6 +46,10 @@ class SessionManager(context: Context) {
     fun isAdmin() = getRole() == ROLE_ADMIN
     fun isResident() = getRole() == ROLE_RESIDENT
     fun isSecurity() = getRole() == ROLE_SECURITY
+    fun isCommittee() = getRole() == ROLE_COMMITTEE
+
+    // Secretary + Committee can author content (notices etc); Secretary alone owns billing/invites.
+    fun canManageContent() = isAdmin() || isCommittee()
 
     fun logout() = prefs.edit().clear().apply()
 }

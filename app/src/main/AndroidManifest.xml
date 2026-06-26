@@ -42,6 +42,18 @@
             android:name=".ui.profile.EditProfileActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".ui.society.SubscriptionActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.society.InviteMembersActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.society.MembersActivity"
+            android:exported="false" />
+
         <receiver
             android:name=".utils.ReminderReceiver"
             android:exported="false">

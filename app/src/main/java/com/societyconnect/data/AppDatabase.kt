@@ -19,9 +19,10 @@ import kotlinx.coroutines.launch
         Notice::class,
         Visitor::class,
         EmergencyContact::class,
-        RecurringConfig::class
+        RecurringConfig::class,
+        Society::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -33,6 +34,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun visitorDao(): VisitorDao
     abstract fun emergencyContactDao(): EmergencyContactDao
     abstract fun recurringConfigDao(): RecurringConfigDao
+    abstract fun societyDao(): SocietyDao
 
     companion object {
         @Volatile private var INSTANCE: AppDatabase? = null
@@ -60,6 +62,27 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        // v2 -> v3: secretary subscriptions + member invite codes.
+        val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS societies (
+                        name TEXT NOT NULL PRIMARY KEY,
+                        secretaryUserId INTEGER NOT NULL,
+                        inviteCode TEXT NOT NULL,
+                        inviteRole TEXT NOT NULL,
+                        subscriptionActive INTEGER NOT NULL,
+                        subscriptionPlan TEXT NOT NULL,
+                        subscriptionStartedAt INTEGER,
+                        subscriptionExpiresAt INTEGER,
+                        createdAt INTEGER NOT NULL
+                    )
+                    """.trimIndent()
+                )
+            }
+        }
+
         fun getInstance(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 Room.databaseBuilder(
@@ -81,7 +104,7 @@ abstract class AppDatabase : RoomDatabase() {
                             }
                         }
                     })
-                    .addMigrations(MIGRATION_1_2)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                     .build()
                     .also { INSTANCE = it }
             }

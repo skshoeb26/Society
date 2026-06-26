@@ -22,6 +22,9 @@ interface UserDao {
     @Query("SELECT * FROM users WHERE role = 'RESIDENT' ORDER BY flatNo ASC")
     suspend fun getAllResidentsList(): List<User>
 
+    @Query("SELECT * FROM users WHERE societyName = :society ORDER BY role ASC, flatNo ASC")
+    fun getBySociety(society: String): LiveData<List<User>>
+
     @Update
     suspend fun update(user: User)
 
@@ -171,4 +174,23 @@ interface RecurringConfigDao {
 
     @Query("SELECT * FROM recurring_config WHERE id = 1 LIMIT 1")
     fun getLive(): LiveData<RecurringConfig?>
+}
+
+// ─── SOCIETY DAO ──────────────────────────────────────────────────────
+@Dao
+interface SocietyDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsert(society: Society)
+
+    @Update
+    suspend fun update(society: Society)
+
+    @Query("SELECT * FROM societies WHERE name = :name LIMIT 1")
+    suspend fun getByName(name: String): Society?
+
+    @Query("SELECT * FROM societies WHERE name = :name LIMIT 1")
+    fun getByNameLive(name: String): LiveData<Society?>
+
+    @Query("SELECT * FROM societies WHERE inviteCode = :code LIMIT 1")
+    suspend fun getByInviteCode(code: String): Society?
 }

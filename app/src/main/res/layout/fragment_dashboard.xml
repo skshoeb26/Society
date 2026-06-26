@@ -14,7 +14,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/primary"
+            android:background="@drawable/bg_gradient_primary"
             android:orientation="vertical"
             android:padding="20dp"
             android:paddingBottom="32dp">
@@ -264,6 +264,48 @@
                                 android:text="₹0" android:textColor="@color/status_paid"
                                 android:textSize="18sp" android:textStyle="bold"/>
                         </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Secretary: Manage Society (subscription, invites, member directory) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardManageSociety"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:visibility="gone"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="@color/white">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="⚙️ Manage Society" android:textColor="@color/text_primary"
+                        android:textSize="15sp" android:textStyle="bold" android:layout_marginBottom="12dp"/>
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnGoSubscription"
+                            android:layout_width="0dp" android:layout_height="wrap_content"
+                            android:layout_weight="1" android:layout_marginEnd="6dp"
+                            android:text="@string/subscription" android:textSize="11sp"
+                            style="@style/Widget.Material3.Button.OutlinedButton"/>
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnGoInvite"
+                            android:layout_width="0dp" android:layout_height="wrap_content"
+                            android:layout_weight="1" android:layout_marginHorizontal="6dp"
+                            android:text="@string/invite_members" android:textSize="11sp"
+                            style="@style/Widget.Material3.Button.OutlinedButton"/>
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnGoMembers"
+                            android:layout_width="0dp" android:layout_height="wrap_content"
+                            android:layout_weight="1" android:layout_marginStart="6dp"
+                            android:text="@string/members" android:textSize="11sp"
+                            style="@style/Widget.Material3.Button.OutlinedButton"/>
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>

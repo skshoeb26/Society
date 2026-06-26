@@ -55,6 +55,12 @@ fun Context.makeCall(phone: String) {
     startActivity(intent)
 }
 
+// ─── Invite Code ─────────────────────────────────────────────────────
+fun generateInviteCode(length: Int = 6): String {
+    val chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789" // no 0/O/1/I — avoids look-alike mistakes
+    return (1..length).map { chars.random() }.joinToString("")
+}
+
 // ─── Greeting ────────────────────────────────────────────────────────
 fun getGreeting(): String {
     return when (Calendar.getInstance().get(Calendar.HOUR_OF_DAY)) {
@@ -112,6 +118,15 @@ fun getCategoryLabel(category: String): String {
         "SECURITY" -> "🔒 Security"
         "PARKING" -> "🅿️ Parking"
         else -> "📋 Other"
+    }
+}
+
+fun getRoleLabel(role: String): String {
+    return when (role) {
+        "ADMIN" -> "Secretary"
+        "SECURITY" -> "Security Guard"
+        "COMMITTEE" -> "Committee"
+        else -> "Resident"
     }
 }
 

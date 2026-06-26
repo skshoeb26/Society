@@ -15,7 +15,7 @@
 
     <style name="Theme.SocietyConnect.Splash" parent="Theme.SocietyConnect">
         <item name="android:statusBarColor">@color/primary</item>
-        <item name="android:windowBackground">@color/primary</item>
+        <item name="android:windowBackground">@drawable/bg_gradient_primary</item>
     </style>
 
     <!-- Card Style -->
@@ -59,13 +59,18 @@
 
     <!-- Status Chip Styles -->
     <style name="ChipPaid" parent="Widget.Material3.Chip.Assist">
-        <item name="chipBackgroundColor">#E8F5E9</item>
+        <item name="chipBackgroundColor">@color/tint_green</item>
         <item name="android:textColor">@color/status_paid</item>
     </style>
 
     <style name="ChipPending" parent="Widget.Material3.Chip.Assist">
-        <item name="chipBackgroundColor">#FFEBEE</item>
+        <item name="chipBackgroundColor">@color/tint_red</item>
         <item name="android:textColor">@color/status_pending</item>
+    </style>
+
+    <!-- Gradient Header Banner (Home, Auth screens) -->
+    <style name="HeaderBanner">
+        <item name="android:background">@drawable/bg_gradient_primary</item>
     </style>
 
 </resources>

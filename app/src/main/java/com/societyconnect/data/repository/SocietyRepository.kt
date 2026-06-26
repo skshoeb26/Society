@@ -110,4 +110,13 @@ class SocietyRepository(context: Context) {
     suspend fun updateEmergencyContact(e: EmergencyContact) = db.emergencyContactDao().update(e)
     suspend fun deleteEmergencyContact(e: EmergencyContact) = db.emergencyContactDao().delete(e)
     suspend fun getEmergencyContactCount() = db.emergencyContactDao().getCount()
+
+    // Society / Subscription / Invites
+    fun getMembersBySociety(society: String) = db.userDao().getBySociety(society)
+    suspend fun removeMember(user: User) = db.userDao().delete(user)
+    suspend fun getSocietyByName(name: String) = db.societyDao().getByName(name)
+    fun getSocietyByNameLive(name: String) = db.societyDao().getByNameLive(name)
+    suspend fun getSocietyByInviteCode(code: String) = db.societyDao().getByInviteCode(code)
+    suspend fun createSociety(society: Society) = db.societyDao().upsert(society)
+    suspend fun updateSociety(society: Society) = db.societyDao().update(society)
 }

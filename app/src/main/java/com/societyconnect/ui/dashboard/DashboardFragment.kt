@@ -1,5 +1,6 @@
 package com.societyconnect.ui.dashboard
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.societyconnect.R
 import com.societyconnect.databinding.FragmentDashboardBinding
+import com.societyconnect.ui.society.InviteMembersActivity
+import com.societyconnect.ui.society.MembersActivity
+import com.societyconnect.ui.society.SubscriptionActivity
 import com.societyconnect.utils.RecurringMaintenanceHelper
 import com.societyconnect.utils.SessionManager
 import com.societyconnect.utils.getGreeting
@@ -80,6 +84,20 @@ class DashboardFragment : Fragment() {
         if (session.isResident()) {
             binding.tvPendingAmount.visibility = View.GONE
             binding.tvPendingLabel.visibility = View.GONE
+        }
+
+        // Secretary-only: quick access to subscription, invites, member directory
+        if (session.isAdmin()) {
+            binding.cardManageSociety.visibility = View.VISIBLE
+            binding.btnGoSubscription.setOnClickListener {
+                startActivity(Intent(requireContext(), SubscriptionActivity::class.java))
+            }
+            binding.btnGoInvite.setOnClickListener {
+                startActivity(Intent(requireContext(), InviteMembersActivity::class.java))
+            }
+            binding.btnGoMembers.setOnClickListener {
+                startActivity(Intent(requireContext(), MembersActivity::class.java))
+            }
         }
 
         // Auto recurring maintenance — sirf admin/secretary ke liye

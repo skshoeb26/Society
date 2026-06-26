@@ -18,6 +18,22 @@
     <string name="role_security">Security Guard</string>
     <string name="already_account">Already have an account? Login</string>
     <string name="no_account">Don\'t have an account? Register</string>
+    <string name="create_society">Create Society</string>
+    <string name="join_with_code">Join with Code</string>
+    <string name="invite_code">Invite Code</string>
+
+    <!-- Society / Subscription / Invite -->
+    <string name="subscription">Subscription</string>
+    <string name="invite_members">Invite Members</string>
+    <string name="members">Members</string>
+    <string name="society_members">Society Members</string>
+    <string name="share_invite_code">Share Invite Code</string>
+    <string name="generate_new_code">Generate New Code</string>
+    <string name="subscription_active">Subscription Active</string>
+    <string name="subscription_inactive">No Active Subscription</string>
+    <string name="activate_subscription">Activate Subscription</string>
+    <string name="monthly_plan">Monthly Plan</string>
+    <string name="yearly_plan">Yearly Plan</string>
 
     <!-- Dashboard -->
     <string name="dashboard">Dashboard</string>

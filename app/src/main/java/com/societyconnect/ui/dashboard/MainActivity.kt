@@ -15,6 +15,9 @@ import com.societyconnect.R
 import com.societyconnect.databinding.ActivityMainBinding
 import com.societyconnect.ui.auth.LoginActivity
 import com.societyconnect.ui.profile.EditProfileActivity
+import com.societyconnect.ui.society.InviteMembersActivity
+import com.societyconnect.ui.society.MembersActivity
+import com.societyconnect.ui.society.SubscriptionActivity
 import com.societyconnect.utils.SessionManager
 
 class MainActivity : AppCompatActivity() {
@@ -48,8 +51,8 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfig)
         binding.bottomNav.setupWithNavController(navController)
 
-        // Hide visitors tab for non-security/admin
-        if (session.isResident()) {
+        // Hide visitors tab for residents/committee (only security + secretary log visitors)
+        if (!session.isAdmin() && !session.isSecurity()) {
             binding.bottomNav.menu.findItem(R.id.visitorsFragment)?.isVisible = false
         }
 
@@ -68,6 +71,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
+        val isSecretary = session.isAdmin()
+        menu.findItem(R.id.action_subscription)?.isVisible = isSecretary
+        menu.findItem(R.id.action_invite_members)?.isVisible = isSecretary
+        menu.findItem(R.id.action_members)?.isVisible = isSecretary
         return true
     }
 
@@ -75,6 +82,18 @@ class MainActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.action_emergency -> {
                 navController.navigate(R.id.emergencyFragment)
+                true
+            }
+            R.id.action_subscription -> {
+                startActivity(Intent(this, SubscriptionActivity::class.java))
+                true
+            }
+            R.id.action_invite_members -> {
+                startActivity(Intent(this, InviteMembersActivity::class.java))
+                true
+            }
+            R.id.action_members -> {
+                startActivity(Intent(this, MembersActivity::class.java))
                 true
             }
             R.id.action_edit_profile -> {
