@@ -1,0 +1,129 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function myProfile() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function mySocietyId() {
+      return myProfile().societyId;
+    }
+
+    function myRole() {
+      return myProfile().role;
+    }
+
+    function inSociety(societyId) {
+      return signedIn() && mySocietyId() == societyId;
+    }
+
+    function hasRole(roles) {
+      return signedIn() && myRole() in roles;
+    }
+
+    // ── users ──────────────────────────────────────────────────────────
+    // Profiles are only ever created by Cloud Functions (Admin SDK, during
+    // signup / invite redemption) — never directly by the client. Reads
+    // and list queries are scoped per-document to the caller's own society
+    // so cross-tenant enumeration isn't possible even via an unfiltered
+    // query. A user may update their own profile but never their own
+    // role/societyId (that would be self-escalation); role/societyId
+    // changes go through Cloud Functions.
+    match /users/{uid} {
+      allow get: if signedIn() && (request.auth.uid == uid || resource.data.societyId == mySocietyId());
+      allow list: if signedIn() && resource.data.societyId == mySocietyId();
+      allow create: if false;
+      allow update: if signedIn() && request.auth.uid == uid
+                    && request.resource.data.role == resource.data.role
+                    && request.resource.data.societyId == resource.data.societyId;
+      allow delete: if false;
+    }
+
+    // ── societies ──────────────────────────────────────────────────────
+    // Members of a society can read its doc. Only the secretary can write
+    // most fields (e.g. regenerating invite code, setting UPI ID); the
+    // subscription* fields and secretaryUid are Cloud-Function-only
+    // (verified Play Billing / payment webhooks flip those), enforced by
+    // requiring those fields to stay unchanged on client writes.
+    match /societies/{societyId} {
+      allow get: if inSociety(societyId);
+      allow list: if false; // discovery happens via Cloud Function (invite code redemption), never a client list query
+      allow create: if false; // via Cloud Function only
+      allow update: if inSociety(societyId) && hasRole(['ADMIN'])
+                    && request.resource.data.subscriptionActive == resource.data.subscriptionActive
+                    && request.resource.data.subscriptionPlan == resource.data.subscriptionPlan
+                    && request.resource.data.subscriptionExpiresAt == resource.data.subscriptionExpiresAt
+                    && request.resource.data.secretaryUid == resource.data.secretaryUid;
+      allow delete: if false;
+
+      // ── notices ──────────────────────────────────────────────────────
+      match /notices/{noticeId} {
+        allow read: if inSociety(societyId);
+        allow create, update, delete: if inSociety(societyId) && hasRole(['ADMIN', 'COMMITTEE']);
+      }
+
+      // ── complaints ───────────────────────────────────────────────────
+      match /complaints/{complaintId} {
+        allow read: if inSociety(societyId);
+        allow create: if inSociety(societyId) && request.resource.data.raisedByUid == request.auth.uid;
+        allow update, delete: if inSociety(societyId) && hasRole(['ADMIN', 'COMMITTEE']);
+      }
+
+      // ── maintenanceBills ─────────────────────────────────────────────
+      // Residents may self-report a payment (attach a UTR reference) but
+      // can never flip isPaid or alter the billed amount/dates themselves
+      // — only ADMIN/TREASURER (after manually confirming the UPI payment)
+      // can mark a bill paid.
+      match /maintenanceBills/{billId} {
+        allow read: if inSociety(societyId);
+        allow create, delete: if inSociety(societyId) && hasRole(['ADMIN', 'TREASURER']);
+        allow update: if inSociety(societyId) && (
+          hasRole(['ADMIN', 'TREASURER']) ||
+          (resource.data.residentUid == request.auth.uid
+            && request.resource.data.isPaid == resource.data.isPaid
+            && request.resource.data.amount == resource.data.amount
+            && request.resource.data.dueDate == resource.data.dueDate
+            && request.resource.data.flatNo == resource.data.flatNo
+            && request.resource.data.residentUid == resource.data.residentUid)
+        );
+      }
+
+      // ── visitors ─────────────────────────────────────────────────────
+      // Security/Admin log entries and check out. A resident/committee
+      // member may only approve or deny a visitor for their own flat.
+      match /visitors/{visitorId} {
+        allow read: if inSociety(societyId);
+        allow create: if inSociety(societyId) && hasRole(['ADMIN', 'SECURITY']);
+        allow update: if inSociety(societyId) && (
+          hasRole(['ADMIN', 'SECURITY']) ||
+          (hasRole(['RESIDENT', 'COMMITTEE']) && resource.data.visitingFlat == myProfile().flatNo)
+        );
+        allow delete: if false;
+      }
+
+      // ── emergencyContacts ────────────────────────────────────────────
+      match /emergencyContacts/{contactId} {
+        allow read: if inSociety(societyId);
+        allow create, update, delete: if inSociety(societyId) && hasRole(['ADMIN']);
+      }
+
+      // ── recurringConfig ──────────────────────────────────────────────
+      match /recurringConfig/{configId} {
+        allow read: if inSociety(societyId);
+        allow create, update: if inSociety(societyId) && hasRole(['ADMIN']);
+        allow delete: if false;
+      }
+    }
+
+    // Default deny for anything not explicitly matched above.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

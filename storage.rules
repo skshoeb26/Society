@@ -1,0 +1,31 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function myProfile() {
+      return firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function inSociety(societyId) {
+      return signedIn() && myProfile().societyId == societyId;
+    }
+
+    // societies/{societyId}/kyc/{uid}/...           — resident KYC docs/photos
+    // societies/{societyId}/visitors/{visitorId}/... — visitor entry photos
+    // societies/{societyId}/notices/{noticeId}/...   — notice attachments
+    // societies/{societyId}/complaints/{complaintId}/... — complaint photos/videos
+    match /societies/{societyId}/{allPaths=**} {
+      allow read: if inSociety(societyId);
+      allow write: if inSociety(societyId) && request.resource.size < 10 * 1024 * 1024;
+    }
+
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
