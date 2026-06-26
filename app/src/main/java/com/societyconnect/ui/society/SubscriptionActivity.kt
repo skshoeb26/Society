@@ -37,13 +37,33 @@ class SubscriptionActivity : AppCompatActivity() {
         binding.btnChooseMonthly.setOnClickListener { confirmActivate("MONTHLY", 499.0) }
         binding.btnChooseYearly.setOnClickListener { confirmActivate("YEARLY", 4999.0) }
         binding.btnCancelSubscription.setOnClickListener { confirmCancel() }
+        binding.btnSaveUpiId.setOnClickListener { saveUpiId() }
 
         authRepo.getSocietyLive(session.getSocietyId()).observe(this) { society ->
             society?.let { render(it) }
         }
     }
 
+    private fun saveUpiId() {
+        val upiId = binding.etUpiId.text.toString().trim()
+        if (upiId.isEmpty()) {
+            toast("Enter a UPI ID first")
+            return
+        }
+        lifecycleScope.launch {
+            try {
+                authRepo.updateUpiId(session.getSocietyId(), upiId)
+                runOnUiThread { toast("UPI ID saved") }
+            } catch (e: Exception) {
+                runOnUiThread { toast(e.message ?: "Failed to save UPI ID") }
+            }
+        }
+    }
+
     private fun render(society: SocietyProfile) {
+        if (binding.etUpiId.text.toString() != (society.upiId ?: "")) {
+            binding.etUpiId.setText(society.upiId ?: "")
+        }
         if (society.subscriptionActive) {
             binding.tvStatusChip.text = "Subscription Active"
             val plan = if (society.subscriptionPlan == "YEARLY") "Yearly Plan" else "Monthly Plan"

@@ -26,7 +26,9 @@ data class Maintenance(
     val dueDate: Long = 0L,
     val isPaid: Boolean = false,
     val paidOn: Long? = null,
-    val createdAt: Long = System.currentTimeMillis()
+    val createdAt: Long = System.currentTimeMillis(),
+    val utrReference: String? = null,        // resident-submitted UPI transaction ref, pending admin confirmation
+    val paymentSubmittedAt: Long? = null
 ) : FirestoreEntity {
     @get:Exclude @set:Exclude
     override var id: String = ""

@@ -286,3 +286,23 @@ export const onMaintenanceBillCreated = onDocumentCreated(
     });
   }
 );
+
+export const onMaintenanceBillUpdated = onDocumentUpdated(
+  "societies/{societyId}/maintenanceBills/{billId}",
+  async (event) => {
+    const before = event.data?.before.data();
+    const after = event.data?.after.data();
+    if (!before || !after) return;
+    // Only notify on a fresh UTR submission, not the later admin confirmation (isPaid flip).
+    if (before.utrReference || !after.utrReference) return;
+
+    const societyId = event.params.societyId;
+    const tokens = await getTokensForSociety(societyId, ["ADMIN", "TREASURER"]);
+    await sendToTokens(
+      tokens,
+      "Payment reference submitted",
+      `Flat ${after.flatNo} · ${after.month} · UTR ${after.utrReference}`,
+      { channel: "maintenance", societyId }
+    );
+  }
+);

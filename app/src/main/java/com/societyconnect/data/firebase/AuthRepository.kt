@@ -84,6 +84,10 @@ class AuthRepository {
         functions.getHttpsCallable("cancelSubscription").call(hashMapOf<String, Any?>()).await()
     }
 
+    suspend fun updateUpiId(societyId: String, upiId: String) {
+        db.collection("societies").document(societyId).update("upiId", upiId).await()
+    }
+
     suspend fun updateProfile(name: String, phone: String, flatType: String) {
         val uid = auth.currentUser?.uid ?: return
         db.collection("users").document(uid)

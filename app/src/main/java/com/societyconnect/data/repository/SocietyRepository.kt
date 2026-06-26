@@ -38,6 +38,11 @@ class SocietyRepository(private val societyId: String) {
     }
     val pendingCount: LiveData<Int> = pendingMaintenance.map { it.size }
 
+    val defaulters: LiveData<List<Maintenance>> = pendingMaintenance.map { list ->
+        val now = System.currentTimeMillis()
+        list.filter { it.dueDate < now }
+    }
+
     fun getMaintenanceByFlat(flatNo: String): LiveData<List<Maintenance>> =
         FirestoreQueryLiveData(
             societyRef.collection("maintenanceBills")
@@ -53,6 +58,11 @@ class SocietyRepository(private val societyId: String) {
     }
     suspend fun deleteMaintenance(m: Maintenance) {
         societyRef.collection("maintenanceBills").document(m.id).delete().await()
+    }
+    suspend fun submitPaymentReference(m: Maintenance, utr: String) {
+        societyRef.collection("maintenanceBills").document(m.id).update(
+            mapOf("utrReference" to utr, "paymentSubmittedAt" to System.currentTimeMillis())
+        ).await()
     }
 
     // ─── BULK MAINTENANCE GENERATION ──────────────────────────────────────

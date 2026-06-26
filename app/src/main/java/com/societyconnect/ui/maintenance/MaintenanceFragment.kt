@@ -3,6 +3,7 @@ package com.societyconnect.ui.maintenance
 import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.*
+import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.societyconnect.databinding.FragmentMaintenanceBinding
 import com.societyconnect.databinding.BottomSheetAddMaintenanceBinding
+import com.societyconnect.data.firebase.AuthRepository
 import com.societyconnect.data.models.Maintenance
 import com.societyconnect.utils.*
 import java.util.*
@@ -21,7 +23,9 @@ class MaintenanceFragment : Fragment() {
     private lateinit var viewModel: MaintenanceViewModel
     private lateinit var session: SessionManager
     private lateinit var adapter: MaintenanceAdapter
+    private val authRepo = AuthRepository()
     private var selectedDueDate = System.currentTimeMillis()
+    private var societyUpiId: String = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentMaintenanceBinding.inflate(inflater, container, false)
@@ -37,8 +41,14 @@ class MaintenanceFragment : Fragment() {
         adapter = MaintenanceAdapter(
             isAdmin = session.isAdmin(),
             onTogglePaid = { viewModel.togglePaid(it) },
-            onDelete = { confirmDelete(it) }
+            onDelete = { confirmDelete(it) },
+            onPayUpi = { payUpi(it) },
+            onSubmitUtr = { showSubmitUtrDialog(it) }
         )
+
+        authRepo.getSocietyLive(session.getSocietyId()).observe(viewLifecycleOwner) { society ->
+            societyUpiId = society?.upiId ?: ""
+        }
 
         binding.rvMaintenance.layoutManager = LinearLayoutManager(requireContext())
         binding.rvMaintenance.adapter = adapter
@@ -62,6 +72,7 @@ class MaintenanceFragment : Fragment() {
         // Show summary only for admin
         binding.cardSummary.visibility = if (session.isAdmin()) View.VISIBLE else View.GONE
         binding.fabAdd.visibility = if (session.isAdmin()) View.VISIBLE else View.GONE
+        binding.chipDefaulters.visibility = if (session.isAdmin()) View.VISIBLE else View.GONE
 
         binding.fabAdd.setOnClickListener { showAddChoice() }
 
@@ -72,6 +83,46 @@ class MaintenanceFragment : Fragment() {
                 adapter.submitList(list)
             }
         }
+        binding.chipDefaulters.setOnClickListener {
+            viewModel.defaulters.observe(viewLifecycleOwner) { list ->
+                adapter.submitList(list)
+            }
+        }
+    }
+
+    private fun payUpi(m: Maintenance) {
+        if (societyUpiId.isBlank()) {
+            requireContext().toast("Secretary hasn't set up a UPI ID yet")
+            return
+        }
+        requireContext().payViaUpi(
+            societyUpiId,
+            session.getSociety().ifEmpty { "Society Connect" },
+            m.amount,
+            "Maintenance ${m.month} - Flat ${m.flatNo}"
+        )
+    }
+
+    private fun showSubmitUtrDialog(m: Maintenance) {
+        val input = EditText(requireContext()).apply {
+            hint = "12-digit UPI transaction reference"
+            setText(m.utrReference ?: "")
+        }
+        AlertDialog.Builder(requireContext())
+            .setTitle("I've Paid")
+            .setMessage("Enter the UPI transaction reference (UTR) so the secretary can confirm your payment.")
+            .setView(input)
+            .setPositiveButton("Submit") { _, _ ->
+                val utr = input.text.toString().trim()
+                if (utr.isEmpty()) {
+                    requireContext().toast("UTR cannot be empty")
+                } else {
+                    viewModel.submitPaymentReference(m, utr)
+                    requireContext().toast("Payment reference submitted")
+                }
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     private fun observeAll() {

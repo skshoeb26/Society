@@ -76,6 +76,14 @@
                 android:text="Pending"
                 style="@style/Widget.Material3.Chip.Filter" />
 
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipDefaulters"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Defaulters"
+                android:visibility="gone"
+                style="@style/Widget.Material3.Chip.Filter" />
+
         </com.google.android.material.chip.ChipGroup>
 
         <!-- List -->

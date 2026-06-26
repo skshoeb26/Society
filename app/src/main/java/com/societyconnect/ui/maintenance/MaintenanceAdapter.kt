@@ -15,7 +15,9 @@ import com.societyconnect.utils.toRupees
 class MaintenanceAdapter(
     private val isAdmin: Boolean,
     private val onTogglePaid: (Maintenance) -> Unit,
-    private val onDelete: (Maintenance) -> Unit
+    private val onDelete: (Maintenance) -> Unit,
+    private val onPayUpi: (Maintenance) -> Unit,
+    private val onSubmitUtr: (Maintenance) -> Unit
 ) : ListAdapter<Maintenance, MaintenanceAdapter.VH>(DIFF) {
 
     inner class VH(val binding: ItemMaintenanceBinding) : RecyclerView.ViewHolder(binding.root)
@@ -41,19 +43,26 @@ class MaintenanceAdapter(
                 tvPaidOn.visibility = View.VISIBLE
                 tvPaidOn.text = "Paid on ${item.paidOn?.toDateString()}"
             } else {
-                tvStatus.text = "PENDING"
+                tvStatus.text = if (item.dueDate < System.currentTimeMillis()) "OVERDUE" else "PENDING"
                 tvStatus.setTextColor(ctx.getColor(R.color.status_pending))
                 tvStatus.setBackgroundResource(R.drawable.bg_status_pending)
                 tvPaidOn.visibility = View.GONE
             }
 
-            // Admin controls
-            btnToggle.visibility = if (isAdmin) View.VISIBLE else View.GONE
-            btnDelete.visibility = if (isAdmin) View.VISIBLE else View.GONE
+            // UTR self-reported, awaiting admin confirmation
+            tvUtrInfo.visibility = if (!item.isPaid && !item.utrReference.isNullOrBlank()) View.VISIBLE else View.GONE
+            tvUtrInfo.text = "UTR submitted: ${item.utrReference} · awaiting confirmation"
 
+            // Admin controls
+            layoutAdminActions.visibility = if (isAdmin) View.VISIBLE else View.GONE
             btnToggle.text = if (item.isPaid) "Mark Pending" else "Mark Paid"
             btnToggle.setOnClickListener { onTogglePaid(item) }
             btnDelete.setOnClickListener { onDelete(item) }
+
+            // Resident pay / self-report controls
+            layoutPay.visibility = if (!isAdmin && !item.isPaid) View.VISIBLE else View.GONE
+            btnPayUpi.setOnClickListener { onPayUpi(item) }
+            btnSubmitUtr.setOnClickListener { onSubmitUtr(item) }
         }
     }
 

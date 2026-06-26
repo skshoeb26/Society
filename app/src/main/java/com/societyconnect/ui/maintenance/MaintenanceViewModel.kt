@@ -18,6 +18,7 @@ class MaintenanceViewModel : ViewModel() {
 
     val allMaintenance get() = repo.allMaintenance
     val pendingMaintenance get() = repo.pendingMaintenance
+    val defaulters get() = repo.defaulters
     val totalCollected get() = repo.totalCollected
     val totalPending get() = repo.totalPending
 
@@ -35,6 +36,10 @@ class MaintenanceViewModel : ViewModel() {
     }
 
     fun deleteMaintenance(m: Maintenance) = viewModelScope.launch { repo.deleteMaintenance(m) }
+
+    fun submitPaymentReference(m: Maintenance, utr: String) = viewModelScope.launch {
+        repo.submitPaymentReference(m, utr)
+    }
 
     // ─── BULK GENERATION ──────────────────────────────────────────────────
     // Result: "✅ 24 flats ka maintenance ban gaya (3 already the)"

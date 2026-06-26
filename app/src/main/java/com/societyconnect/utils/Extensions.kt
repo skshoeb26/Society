@@ -88,6 +88,20 @@ fun Context.createNotificationChannels() {
     channels.forEach { manager.createNotificationChannel(it) }
 }
 
+// ─── UPI Payments ────────────────────────────────────────────────────
+fun buildUpiPayUri(upiId: String, payeeName: String, amount: Double, note: String): Uri =
+    Uri.parse("upi://pay").buildUpon()
+        .appendQueryParameter("pa", upiId)
+        .appendQueryParameter("pn", payeeName)
+        .appendQueryParameter("am", "%.2f".format(amount))
+        .appendQueryParameter("cu", "INR")
+        .appendQueryParameter("tn", note)
+        .build()
+
+fun Context.payViaUpi(upiId: String, payeeName: String, amount: Double, note: String) {
+    startActivity(Intent(Intent.ACTION_VIEW, buildUpiPayUri(upiId, payeeName, amount, note)))
+}
+
 // ─── Status Color ────────────────────────────────────────────────────
 fun getStatusColor(status: String, context: Context): Int {
     return when (status) {
