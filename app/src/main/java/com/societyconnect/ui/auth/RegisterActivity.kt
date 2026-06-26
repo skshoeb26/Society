@@ -2,23 +2,21 @@ package com.societyconnect.ui.auth
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.google.firebase.functions.FirebaseFunctionsException
+import com.societyconnect.data.firebase.AuthRepository
 import com.societyconnect.databinding.ActivityRegisterBinding
-import com.societyconnect.data.models.Society
-import com.societyconnect.data.models.User
-import com.societyconnect.data.repository.SocietyRepository
-import com.societyconnect.ui.dashboard.MainActivity
 import com.societyconnect.utils.SessionManager
-import com.societyconnect.utils.generateInviteCode
 import com.societyconnect.utils.toast
 import kotlinx.coroutines.launch
 
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRegisterBinding
-    private lateinit var repo: SocietyRepository
+    private lateinit var authRepo: AuthRepository
     private lateinit var session: SessionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,11 +24,18 @@ class RegisterActivity : AppCompatActivity() {
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        repo = SocietyRepository(this)
+        authRepo = AuthRepository()
         session = SessionManager(this)
 
-        // Flat type dropdown (bulk maintenance ke liye)
-        binding.actvFlatType?.let { dropdown ->
+        val account = authRepo.currentUser
+        if (account == null) {
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+            return
+        }
+        binding.tvAccountEmail.text = account.email ?: account.displayName ?: ""
+
+        binding.actvFlatType.let { dropdown ->
             val flatTypes = listOf("1BHK", "2BHK", "3BHK", "SHOP")
             dropdown.setAdapter(
                 ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, flatTypes)
@@ -41,35 +46,28 @@ class RegisterActivity : AppCompatActivity() {
         binding.toggleMode.addOnButtonCheckedListener { _, checkedId, isChecked ->
             if (!isChecked) return@addOnButtonCheckedListener
             val isCreateMode = checkedId == binding.btnModeCreate.id
-            binding.layoutSociety.visibility = if (isCreateMode) android.view.View.VISIBLE else android.view.View.GONE
-            binding.layoutInviteCode.visibility = if (isCreateMode) android.view.View.GONE else android.view.View.VISIBLE
+            binding.layoutSociety.visibility = if (isCreateMode) View.VISIBLE else View.GONE
+            binding.layoutInviteCode.visibility = if (isCreateMode) View.GONE else View.VISIBLE
         }
 
         binding.btnRegister.setOnClickListener { attemptRegister() }
-        binding.tvLogin.setOnClickListener { finish() }
+        binding.tvSignOut.setOnClickListener {
+            authRepo.signOut()
+            startActivity(Intent(this, LoginActivity::class.java))
+            finishAffinity()
+        }
     }
 
     private fun attemptRegister() {
         val isCreateMode = binding.toggleMode.checkedButtonId == binding.btnModeCreate.id
 
-        val name = binding.etName.text.toString().trim()
         val flat = binding.etFlat.text.toString().trim().uppercase()
-        val phone = binding.etPhone.text.toString().trim()
-        val password = binding.etPassword.text.toString().trim()
         val societyInput = binding.etSociety.text.toString().trim()
         val inviteCodeInput = binding.etInviteCode.text.toString().trim().uppercase()
-        val flatType = binding.actvFlatType?.text?.toString()?.ifEmpty { "1BHK" } ?: "1BHK"
+        val flatType = binding.actvFlatType.text.toString().ifEmpty { "1BHK" }
 
-        if (name.isEmpty() || flat.isEmpty() || phone.isEmpty() || password.isEmpty()) {
-            toast("Please fill all fields")
-            return
-        }
-        if (phone.length != 10) {
-            toast("Enter a valid 10-digit phone number")
-            return
-        }
-        if (password.length < 4) {
-            toast("Password must be at least 4 characters")
+        if (flat.isEmpty()) {
+            toast("Enter your flat number")
             return
         }
         if (isCreateMode && societyInput.isEmpty()) {
@@ -84,95 +82,53 @@ class RegisterActivity : AppCompatActivity() {
         binding.btnRegister.isEnabled = false
 
         lifecycleScope.launch {
-            if (isCreateMode) {
-                registerAsSecretary(name, flat, phone, password, societyInput, flatType)
-            } else {
-                registerWithInviteCode(name, flat, phone, password, inviteCodeInput, flatType)
+            try {
+                if (isCreateMode) {
+                    val result = authRepo.createSociety(societyInput, flat, flatType)
+                    finishOnboarding(result["societyId"] as String, societyInput, SessionManager.ROLE_ADMIN, flat)
+                } else {
+                    val result = authRepo.redeemInviteCode(inviteCodeInput, flat, flatType)
+                    finishOnboarding(
+                        result["societyId"] as String,
+                        result["societyName"] as String,
+                        result["role"] as String,
+                        flat
+                    )
+                }
+            } catch (e: Exception) {
+                binding.btnRegister.isEnabled = true
+                toast(describeError(e))
             }
         }
     }
 
-    private suspend fun registerAsSecretary(
-        name: String, flat: String, phone: String, password: String,
-        societyName: String, flatType: String
-    ) {
-        if (repo.getSocietyByName(societyName) != null) {
-            runOnUiThread {
-                binding.btnRegister.isEnabled = true
-                toast("That society name is already taken. Ask your secretary for an invite code instead.")
-            }
-            return
-        }
-
-        val user = User(
-            name = name,
+    private fun finishOnboarding(societyId: String, societyName: String, role: String, flat: String) {
+        val account = authRepo.currentUser
+        session.saveSession(
+            userId = account?.uid ?: "",
+            name = account?.displayName ?: "",
             flatNo = flat,
-            phone = phone,
-            password = password,
-            role = SessionManager.ROLE_ADMIN,
+            role = role,
+            societyId = societyId,
             societyName = societyName,
-            flatType = flatType
+            phone = ""
         )
-        val id = repo.registerUser(user)
-
-        if (id > 0) {
-            repo.createSociety(
-                Society(
-                    name = societyName,
-                    secretaryUserId = id.toInt(),
-                    inviteCode = generateInviteCode()
-                )
-            )
-            runOnUiThread {
-                session.saveSession(id.toInt(), name, flat, SessionManager.ROLE_ADMIN, societyName, phone)
-                toast("Society created! Find your invite code under Invite Members.")
-                startActivity(Intent(this@RegisterActivity, MainActivity::class.java))
-                finishAffinity()
-            }
-        } else {
-            runOnUiThread {
-                binding.btnRegister.isEnabled = true
-                toast("Registration failed. Try again.")
-            }
-        }
+        toast(
+            if (role == SessionManager.ROLE_ADMIN) "Society created! Find your invite code under Invite Members."
+            else "Welcome to $societyName!"
+        )
+        startActivity(Intent(this, com.societyconnect.ui.dashboard.MainActivity::class.java))
+        finishAffinity()
     }
 
-    private suspend fun registerWithInviteCode(
-        name: String, flat: String, phone: String, password: String,
-        inviteCode: String, flatType: String
-    ) {
-        val society = repo.getSocietyByInviteCode(inviteCode)
-        if (society == null) {
-            runOnUiThread {
-                binding.btnRegister.isEnabled = true
-                toast("Invalid invite code. Check with your secretary.")
-            }
-            return
-        }
-
-        val user = User(
-            name = name,
-            flatNo = flat,
-            phone = phone,
-            password = password,
-            role = society.inviteRole,
-            societyName = society.name,
-            flatType = flatType
-        )
-        val id = repo.registerUser(user)
-
-        if (id > 0) {
-            runOnUiThread {
-                session.saveSession(id.toInt(), name, flat, society.inviteRole, society.name, phone)
-                toast("Welcome to ${society.name}!")
-                startActivity(Intent(this@RegisterActivity, MainActivity::class.java))
-                finishAffinity()
-            }
-        } else {
-            runOnUiThread {
-                binding.btnRegister.isEnabled = true
-                toast("Registration failed. Try again.")
+    private fun describeError(e: Exception): String {
+        if (e is FirebaseFunctionsException) {
+            return when (e.code) {
+                FirebaseFunctionsException.Code.NOT_FOUND -> "Invalid invite code. Check with your secretary."
+                FirebaseFunctionsException.Code.ALREADY_EXISTS -> "You're already part of a society."
+                else -> e.message ?: "Something went wrong. Try again."
             }
         }
+        return e.message ?: "Something went wrong. Try again."
     }
 }

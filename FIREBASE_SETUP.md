@@ -29,11 +29,17 @@ Cloud Functions on the Blaze plan). Open it at https://console.firebase.google.c
 ## 3. Enable Auth providers
 
 Authentication → Sign-in method → enable:
-- **Phone** (for resident/security OTP login).
-- **Google** (for faster sign-in where the phone number isn't required).
+- **Google** — this is the app's only sign-in method (no Phone/SMS OTP, to avoid the
+  per-verification cost).
 
-For Phone Auth in production, also configure the SHA-1 above and consider enabling
-**App Check** later (Phase 2+) to stop OTP abuse/quota draining from outside the app.
+You also need a **Web client ID** so the Android app can request an ID token:
+- Firebase auto-creates one the first time you enable the Google provider — find it
+  under Authentication → Sign-in method → Google → Web SDK configuration, or in
+  Google Cloud Console → APIs & Services → Credentials (type "Web application").
+- Open `app/google-services.json`, find the `oauth_client` array under your Android
+  app's `client` entry, and replace the placeholder entry (`client_type: 3`) with the
+  real Web client ID. Re-downloading `google-services.json` from the console (step 2)
+  after enabling Google sign-in will already include it correctly.
 
 ## 4. Create the Firestore database
 
@@ -68,15 +74,22 @@ and check the caller's society membership.
 
 ## 7. Cloud Functions
 
-Not yet implemented in this repo (`functions/` directory doesn't exist yet — coming in
-a later task: `createSociety` and `redeemInviteCode` callables, plus FCM push triggers).
-Once that code lands, deploy with:
+The `functions/` directory contains the callable functions the app depends on for
+tenant bootstrap: `createSociety`, `redeemInviteCode`, `activateSubscription`,
+`cancelSubscription`. These run with the Admin SDK so they can create/modify documents
+the client-side security rules deliberately lock down (e.g. `allow create: if false`
+on `/users/{uid}` and `/societies/{societyId}`).
 
 ```bash
+cd functions
+npm install
+npm run build
 firebase deploy --only functions
 ```
 
 This requires the Blaze (pay-as-you-go) plan, which you already have via billing.
+FCM push triggers (e.g. notify on new notice/complaint) are a later addition to this
+same `functions/` directory.
 
 ## 8. Cloud Messaging (push notifications)
 
@@ -103,8 +116,10 @@ having created the project.
 
 - [ ] Register Android app (`com.societyconnect`) in Firebase console, add debug + release SHA-1.
 - [ ] Replace `app/google-services.json` placeholder with the real downloaded file.
-- [ ] Enable Phone + Google sign-in providers.
+- [ ] Enable the Google sign-in provider; confirm the Web client ID is in
+      `app/google-services.json`.
 - [ ] Create Firestore database (production mode, nearest region).
 - [ ] Set real project ID in `.firebaserc`.
 - [ ] `firebase deploy --only firestore:rules,firestore:indexes,storage`.
 - [ ] Create Cloud Storage bucket (production mode, same region).
+- [ ] `cd functions && npm install && npm run build && firebase deploy --only functions`.

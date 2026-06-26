@@ -3,35 +3,6 @@ package com.societyconnect.data.models
 import androidx.lifecycle.LiveData
 import androidx.room.*
 
-// ─── USER DAO ─────────────────────────────────────────────────────────
-@Dao
-interface UserDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(user: User): Long
-
-    @Query("SELECT * FROM users WHERE phone = :phone AND password = :password LIMIT 1")
-    suspend fun login(phone: String, password: String): User?
-
-    @Query("SELECT * FROM users WHERE id = :id LIMIT 1")
-    suspend fun getById(id: Int): User?
-
-    @Query("SELECT * FROM users WHERE role = 'RESIDENT' ORDER BY flatNo ASC")
-    fun getAllResidents(): LiveData<List<User>>
-
-    // Bulk maintenance ke liye — list version (LiveData nahi)
-    @Query("SELECT * FROM users WHERE role = 'RESIDENT' ORDER BY flatNo ASC")
-    suspend fun getAllResidentsList(): List<User>
-
-    @Query("SELECT * FROM users WHERE societyName = :society ORDER BY role ASC, flatNo ASC")
-    fun getBySociety(society: String): LiveData<List<User>>
-
-    @Update
-    suspend fun update(user: User)
-
-    @Delete
-    suspend fun delete(user: User)
-}
-
 // ─── MAINTENANCE DAO ──────────────────────────────────────────────────
 @Dao
 interface MaintenanceDao {
@@ -174,23 +145,4 @@ interface RecurringConfigDao {
 
     @Query("SELECT * FROM recurring_config WHERE id = 1 LIMIT 1")
     fun getLive(): LiveData<RecurringConfig?>
-}
-
-// ─── SOCIETY DAO ──────────────────────────────────────────────────────
-@Dao
-interface SocietyDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsert(society: Society)
-
-    @Update
-    suspend fun update(society: Society)
-
-    @Query("SELECT * FROM societies WHERE name = :name LIMIT 1")
-    suspend fun getByName(name: String): Society?
-
-    @Query("SELECT * FROM societies WHERE name = :name LIMIT 1")
-    fun getByNameLive(name: String): LiveData<Society?>
-
-    @Query("SELECT * FROM societies WHERE inviteCode = :code LIMIT 1")
-    suspend fun getByInviteCode(code: String): Society?
 }

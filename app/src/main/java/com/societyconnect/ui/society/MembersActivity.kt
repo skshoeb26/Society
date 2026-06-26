@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.societyconnect.data.models.User
-import com.societyconnect.data.repository.SocietyRepository
+import com.societyconnect.data.firebase.AuthRepository
+import com.societyconnect.data.firebase.UserProfile
 import com.societyconnect.databinding.ActivityMembersBinding
 import com.societyconnect.databinding.ItemMemberBinding
 import com.societyconnect.utils.SessionManager
@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 class MembersActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMembersBinding
-    private lateinit var repo: SocietyRepository
+    private lateinit var authRepo: AuthRepository
     private lateinit var session: SessionManager
     private lateinit var adapter: MembersAdapter
 
@@ -34,7 +34,7 @@ class MembersActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         session = SessionManager(this)
-        repo = SocietyRepository(this)
+        authRepo = AuthRepository()
 
         if (!session.isAdmin()) {
             toast("Only the secretary can view the members directory")
@@ -45,27 +45,27 @@ class MembersActivity : AppCompatActivity() {
         binding.btnBack.setOnClickListener { finish() }
 
         adapter = MembersAdapter(
-            currentUserId = session.getUserId(),
-            onCall = { makeCall(it.phone) },
+            currentUid = session.getUserId(),
+            onCall = { user -> user.phone?.let { makeCall(it) } ?: toast("No phone number on file") },
             onRemove = { confirmRemove(it) }
         )
         binding.rvMembers.layoutManager = LinearLayoutManager(this)
         binding.rvMembers.adapter = adapter
 
-        repo.getMembersBySociety(session.getSociety()).observe(this) { list ->
+        authRepo.getMembersLive(session.getSocietyId()).observe(this) { list ->
             adapter.submitList(list)
             binding.tvCount.text = "${list.size} member${if (list.size == 1) "" else "s"}"
             binding.emptyState.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
         }
     }
 
-    private fun confirmRemove(user: User) {
+    private fun confirmRemove(user: UserProfile) {
         AlertDialog.Builder(this)
             .setTitle("Remove Member")
             .setMessage("Remove ${user.name} (Flat ${user.flatNo}) from ${session.getSociety()}? They'll need a new invite code to rejoin.")
             .setPositiveButton("Remove") { _, _ ->
                 lifecycleScope.launch {
-                    repo.removeMember(user)
+                    authRepo.removeMember(user.uid)
                     runOnUiThread { toast("${user.name} removed") }
                 }
             }
@@ -75,10 +75,10 @@ class MembersActivity : AppCompatActivity() {
 }
 
 class MembersAdapter(
-    private val currentUserId: Int,
-    private val onCall: (User) -> Unit,
-    private val onRemove: (User) -> Unit
-) : ListAdapter<User, MembersAdapter.VH>(DIFF) {
+    private val currentUid: String,
+    private val onCall: (UserProfile) -> Unit,
+    private val onRemove: (UserProfile) -> Unit
+) : ListAdapter<UserProfile, MembersAdapter.VH>(DIFF) {
 
     inner class VH(val binding: ItemMemberBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -92,15 +92,15 @@ class MembersAdapter(
             tvName.text = item.name
             tvFlatRole.text = "Flat ${item.flatNo} · ${getRoleLabel(item.role)}"
             btnCall.setOnClickListener { onCall(item) }
-            btnRemove.visibility = if (item.id != currentUserId) View.VISIBLE else View.GONE
+            btnRemove.visibility = if (item.uid != currentUid) View.VISIBLE else View.GONE
             btnRemove.setOnClickListener { onRemove(item) }
         }
     }
 
     companion object {
-        val DIFF = object : DiffUtil.ItemCallback<User>() {
-            override fun areItemsTheSame(a: User, b: User) = a.id == b.id
-            override fun areContentsTheSame(a: User, b: User) = a == b
+        val DIFF = object : DiffUtil.ItemCallback<UserProfile>() {
+            override fun areItemsTheSame(a: UserProfile, b: UserProfile) = a.uid == b.uid
+            override fun areContentsTheSame(a: UserProfile, b: UserProfile) = a == b && a.uid == b.uid
         }
     }
 }

@@ -20,7 +20,7 @@ import java.util.Locale
  */
 object RecurringMaintenanceHelper {
 
-    suspend fun checkAndGenerate(context: Context): String? {
+    suspend fun checkAndGenerate(context: Context, societyId: String): String? {
         val repo = SocietyRepository(context)
         val config = repo.getRecurringConfig() ?: return null
 
@@ -48,6 +48,7 @@ object RecurringMaintenanceHelper {
         )
 
         val (generated, _) = repo.generateBulkMaintenance(
+            societyId = societyId,
             month = currentMonth,
             dueDate = dueDate,
             mode = config.mode,

@@ -104,7 +104,7 @@ class DashboardFragment : Fragment() {
         // Naya mahina aaya toh apne aap sab flats ka maintenance ban jaata hai
         if (session.isAdmin()) {
             viewLifecycleOwner.lifecycleScope.launch {
-                val result = RecurringMaintenanceHelper.checkAndGenerate(requireContext())
+                val result = RecurringMaintenanceHelper.checkAndGenerate(requireContext(), session.getSocietyId())
                 result?.let { requireContext().toast(it) }
             }
         }

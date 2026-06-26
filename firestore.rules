@@ -34,7 +34,9 @@ service cloud.firestore {
     // so cross-tenant enumeration isn't possible even via an unfiltered
     // query. A user may update their own profile but never their own
     // role/societyId (that would be self-escalation); role/societyId
-    // changes go through Cloud Functions.
+    // changes go through Cloud Functions. An admin may remove a member of
+    // their own society (but never themselves) — used by the member
+    // directory's "remove member" action.
     match /users/{uid} {
       allow get: if signedIn() && (request.auth.uid == uid || resource.data.societyId == mySocietyId());
       allow list: if signedIn() && resource.data.societyId == mySocietyId();
@@ -42,7 +44,9 @@ service cloud.firestore {
       allow update: if signedIn() && request.auth.uid == uid
                     && request.resource.data.role == resource.data.role
                     && request.resource.data.societyId == resource.data.societyId;
-      allow delete: if false;
+      allow delete: if signedIn() && hasRole(['ADMIN'])
+                    && resource.data.societyId == mySocietyId()
+                    && uid != request.auth.uid;
     }
 
     // ── societies ──────────────────────────────────────────────────────

@@ -10,17 +10,19 @@
     <string name="name">Full Name</string>
     <string name="flat_no">Flat Number</string>
     <string name="phone">Phone Number</string>
-    <string name="password">Password</string>
     <string name="society_name">Society Name</string>
     <string name="select_role">Select Role</string>
     <string name="role_admin">Admin / Secretary</string>
     <string name="role_resident">Resident</string>
     <string name="role_security">Security Guard</string>
-    <string name="already_account">Already have an account? Login</string>
-    <string name="no_account">Don\'t have an account? Register</string>
     <string name="create_society">Create Society</string>
     <string name="join_with_code">Join with Code</string>
     <string name="invite_code">Invite Code</string>
+    <string name="sign_in_with_google">Continue with Google</string>
+    <string name="sign_in_subtitle">Sign in to Society Connect</string>
+    <string name="sign_in_helper">New here? Signing in with Google will set up your account — you\'ll create or join a society next.</string>
+    <string name="setup_society">Set up your society</string>
+    <string name="sign_out_different_account">Sign in with a different Google account</string>
 
     <!-- Society / Subscription / Invite -->
     <string name="subscription">Subscription</string>

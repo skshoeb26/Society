@@ -41,6 +41,7 @@ class MaintenanceViewModel : ViewModel() {
     val bulkResult = MutableLiveData<String>()
 
     fun generateBulk(
+        societyId: String,
         month: String,
         dueDate: Long,
         mode: String,
@@ -48,7 +49,7 @@ class MaintenanceViewModel : ViewModel() {
         sizeAmounts: Map<String, Double>
     ) = viewModelScope.launch {
         val (generated, skipped) = repo.generateBulkMaintenance(
-            month, dueDate, mode, sameAmount, sizeAmounts
+            societyId, month, dueDate, mode, sameAmount, sizeAmounts
         )
         bulkResult.postValue(
             when {

@@ -39,6 +39,14 @@
         { "fieldPath": "isPinned", "order": "DESCENDING" },
         { "fieldPath": "createdAt", "order": "DESCENDING" }
       ]
+    },
+    {
+      "collectionGroup": "users",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "societyId", "order": "ASCENDING" },
+        { "fieldPath": "flatNo", "order": "ASCENDING" }
+      ]
     }
   ],
   "fieldOverrides": []

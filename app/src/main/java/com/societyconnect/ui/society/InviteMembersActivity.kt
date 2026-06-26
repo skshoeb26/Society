@@ -5,20 +5,21 @@ import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.societyconnect.data.models.Society
-import com.societyconnect.data.repository.SocietyRepository
+import com.societyconnect.data.firebase.AuthRepository
+import com.societyconnect.data.firebase.SocietyProfile
 import com.societyconnect.databinding.ActivityInviteMembersBinding
 import com.societyconnect.utils.SessionManager
 import com.societyconnect.utils.generateInviteCode
 import com.societyconnect.utils.toast
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class InviteMembersActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityInviteMembersBinding
-    private lateinit var repo: SocietyRepository
+    private lateinit var authRepo: AuthRepository
     private lateinit var session: SessionManager
-    private var currentSociety: Society? = null
+    private var currentSociety: SocietyProfile? = null
     private var isApplyingFromData = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,7 +28,7 @@ class InviteMembersActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         session = SessionManager(this)
-        repo = SocietyRepository(this)
+        authRepo = AuthRepository()
 
         if (!session.isAdmin()) {
             toast("Only the secretary can invite members")
@@ -53,12 +54,12 @@ class InviteMembersActivity : AppCompatActivity() {
             applyInviteRole(role)
         }
 
-        repo.getSocietyByNameLive(session.getSociety()).observe(this) { society ->
+        authRepo.getSocietyLive(session.getSocietyId()).observe(this) { society ->
             society?.let { render(it) }
         }
     }
 
-    private fun render(society: Society) {
+    private fun render(society: SocietyProfile) {
         currentSociety = society
         if (!society.subscriptionActive) {
             binding.cardLocked.visibility = android.view.View.VISIBLE
@@ -83,7 +84,7 @@ class InviteMembersActivity : AppCompatActivity() {
         val society = currentSociety ?: return
         if (society.inviteRole == role) return
         lifecycleScope.launch {
-            repo.updateSociety(society.copy(inviteRole = role))
+            authRepo.societiesCollection().document(society.id).update("inviteRole", role).await()
         }
     }
 
@@ -110,7 +111,8 @@ class InviteMembersActivity : AppCompatActivity() {
     private fun regenerate() {
         val society = currentSociety ?: return
         lifecycleScope.launch {
-            repo.updateSociety(society.copy(inviteCode = generateInviteCode()))
+            authRepo.societiesCollection().document(society.id)
+                .update("inviteCode", generateInviteCode()).await()
             runOnUiThread { toast("New invite code generated") }
         }
     }

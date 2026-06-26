@@ -2,18 +2,12 @@ package com.societyconnect.data.repository
 
 import android.content.Context
 import com.societyconnect.data.AppDatabase
+import com.societyconnect.data.firebase.AuthRepository
 import com.societyconnect.data.models.*
 
 class SocietyRepository(context: Context) {
     private val db = AppDatabase.getInstance(context)
-
-    // Users
-    val allResidents = db.userDao().getAllResidents()
-    suspend fun registerUser(user: User) = db.userDao().insert(user)
-    suspend fun loginUser(phone: String, password: String) = db.userDao().login(phone, password)
-    suspend fun getUserById(id: Int) = db.userDao().getById(id)
-    suspend fun getAllResidentsList() = db.userDao().getAllResidentsList()
-    suspend fun updateProfile(user: User) = db.userDao().update(user)
+    private val authRepo = AuthRepository()
 
     // Maintenance
     val allMaintenance = db.maintenanceDao().getAll()
@@ -31,13 +25,14 @@ class SocietyRepository(context: Context) {
     // Returns: Pair(kitne generate hue, kitne skip hue kyunki pehle se the)
 
     suspend fun generateBulkMaintenance(
+        societyId: String,
         month: String,           // "June 2024"
         dueDate: Long,
         mode: String,            // "SAME" ya "BY_SIZE"
         sameAmount: Double,
         sizeAmounts: Map<String, Double>   // {"1BHK" to 1000.0, "2BHK" to 1500.0, ...}
     ): Pair<Int, Int> {
-        val residents = db.userDao().getAllResidentsList()
+        val residents = authRepo.getResidents(societyId)
         var generated = 0
         var skipped = 0
         val toInsert = mutableListOf<Maintenance>()
@@ -110,13 +105,4 @@ class SocietyRepository(context: Context) {
     suspend fun updateEmergencyContact(e: EmergencyContact) = db.emergencyContactDao().update(e)
     suspend fun deleteEmergencyContact(e: EmergencyContact) = db.emergencyContactDao().delete(e)
     suspend fun getEmergencyContactCount() = db.emergencyContactDao().getCount()
-
-    // Society / Subscription / Invites
-    fun getMembersBySociety(society: String) = db.userDao().getBySociety(society)
-    suspend fun removeMember(user: User) = db.userDao().delete(user)
-    suspend fun getSocietyByName(name: String) = db.societyDao().getByName(name)
-    fun getSocietyByNameLive(name: String) = db.societyDao().getByNameLive(name)
-    suspend fun getSocietyByInviteCode(code: String) = db.societyDao().getByInviteCode(code)
-    suspend fun createSociety(society: Society) = db.societyDao().upsert(society)
-    suspend fun updateSociety(society: Society) = db.societyDao().update(society)
 }

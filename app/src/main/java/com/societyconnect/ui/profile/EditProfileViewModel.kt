@@ -4,30 +4,33 @@ import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.societyconnect.data.models.User
-import com.societyconnect.data.repository.SocietyRepository
+import com.societyconnect.data.firebase.AuthRepository
+import com.societyconnect.data.firebase.UserProfile
 import com.societyconnect.utils.SessionManager
 import kotlinx.coroutines.launch
 
 class EditProfileViewModel : ViewModel() {
-    private lateinit var repo: SocietyRepository
-    private lateinit var session: SessionManager
+    private val authRepo = AuthRepository()
+    private var session: SessionManager? = null
 
     fun init(context: Context) {
-        if (!::repo.isInitialized) repo = SocietyRepository(context)
-        if (!::session.isInitialized) session = SessionManager(context)
+        if (session == null) session = SessionManager(context)
     }
 
-    val user = MutableLiveData<User?>()
+    val profile = MutableLiveData<UserProfile?>()
     val result = MutableLiveData<String>()
 
-    fun loadUser(userId: Int) = viewModelScope.launch {
-        user.postValue(repo.getUserById(userId))
+    fun loadProfile() = viewModelScope.launch {
+        profile.postValue(authRepo.getMyProfile())
     }
 
-    fun updateProfile(existing: User, name: String, phone: String, flatType: String) = viewModelScope.launch {
-        repo.updateProfile(existing.copy(name = name, phone = phone, flatType = flatType))
-        session.saveSession(existing.id, name, existing.flatNo, existing.role, existing.societyName, phone)
-        result.postValue("✅ Profile updated successfully")
+    fun updateProfile(name: String, phone: String, flatType: String) = viewModelScope.launch {
+        try {
+            authRepo.updateProfile(name, phone, flatType)
+            session?.updateProfile(name, phone)
+            result.postValue("✅ Profile updated successfully")
+        } catch (e: Exception) {
+            result.postValue("❌ ${e.message ?: "Update failed"}")
+        }
     }
 }

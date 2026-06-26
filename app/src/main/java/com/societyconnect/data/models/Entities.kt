@@ -3,20 +3,6 @@ package com.societyconnect.data.models
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-// ─── USER ────────────────────────────────────────────────────────────
-@Entity(tableName = "users")
-data class User(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val name: String,
-    val flatNo: String,
-    val phone: String,
-    val password: String,
-    val role: String,          // ADMIN (secretary), RESIDENT, SECURITY, COMMITTEE
-    val societyName: String,
-    val flatType: String = "1BHK",   // 1BHK, 2BHK, 3BHK, SHOP — bulk maintenance ke liye
-    val createdAt: Long = System.currentTimeMillis()
-)
-
 // ─── MAINTENANCE ─────────────────────────────────────────────────────
 @Entity(tableName = "maintenance")
 data class Maintenance(
@@ -94,20 +80,4 @@ data class RecurringConfig(
     val amountShop: Double = 0.0,
     val dueDay: Int = 10,                  // Mahine ka konsa din due (e.g. 10th)
     val lastGeneratedMonth: String = ""    // "June 2024" — duplicate rokne ke liye
-)
-
-// ─── SOCIETY ─────────────────────────────────────────────────────────
-// One row per society. The secretary who creates the society owns the
-// subscription and the active invite code; members join by redeeming it.
-@Entity(tableName = "societies")
-data class Society(
-    @PrimaryKey val name: String,
-    val secretaryUserId: Int,
-    val inviteCode: String,
-    val inviteRole: String = "RESIDENT",   // role granted to whoever redeems the current code
-    val subscriptionActive: Boolean = false,
-    val subscriptionPlan: String = "",
-    val subscriptionStartedAt: Long? = null,
-    val subscriptionExpiresAt: Long? = null,
-    val createdAt: Long = System.currentTimeMillis()
 )

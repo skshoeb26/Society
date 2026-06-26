@@ -13,28 +13,24 @@ import kotlinx.coroutines.launch
 
 @Database(
     entities = [
-        User::class,
         Maintenance::class,
         Complaint::class,
         Notice::class,
         Visitor::class,
         EmergencyContact::class,
-        RecurringConfig::class,
-        Society::class
+        RecurringConfig::class
     ],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
 
-    abstract fun userDao(): UserDao
     abstract fun maintenanceDao(): MaintenanceDao
     abstract fun complaintDao(): ComplaintDao
     abstract fun noticeDao(): NoticeDao
     abstract fun visitorDao(): VisitorDao
     abstract fun emergencyContactDao(): EmergencyContactDao
     abstract fun recurringConfigDao(): RecurringConfigDao
-    abstract fun societyDao(): SocietyDao
 
     companion object {
         @Volatile private var INSTANCE: AppDatabase? = null
@@ -83,6 +79,14 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        // v3 -> v4: User/Society moved to Firestore (multi-tenant Firebase backend).
+        val MIGRATION_3_4 = object : Migration(3, 4) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("DROP TABLE IF EXISTS users")
+                db.execSQL("DROP TABLE IF EXISTS societies")
+            }
+        }
+
         fun getInstance(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 Room.databaseBuilder(
@@ -104,7 +108,7 @@ abstract class AppDatabase : RoomDatabase() {
                             }
                         }
                     })
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
                     .build()
                     .also { INSTANCE = it }
             }

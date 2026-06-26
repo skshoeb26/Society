@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.societyconnect.databinding.BottomSheetBulkMaintenanceBinding
 import com.societyconnect.data.models.RecurringConfig
+import com.societyconnect.utils.SessionManager
 import com.societyconnect.utils.toast
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -141,7 +142,8 @@ class BulkMaintenanceSheet : BottomSheetDialogFragment() {
         }
 
         // Generate maintenance for all flats
-        viewModel.generateBulk(month, selectedDueDate, mode, sameAmount, sizeAmounts)
+        val societyId = SessionManager(requireContext()).getSocietyId()
+        viewModel.generateBulk(societyId, month, selectedDueDate, mode, sameAmount, sizeAmounts)
 
         // Recurring config save karo
         if (binding.switchRecurring.isChecked) {

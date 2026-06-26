@@ -11,6 +11,8 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.societyconnect.R
 import com.societyconnect.databinding.ActivityMainBinding
 import com.societyconnect.ui.auth.LoginActivity
@@ -18,6 +20,7 @@ import com.societyconnect.ui.profile.EditProfileActivity
 import com.societyconnect.ui.society.InviteMembersActivity
 import com.societyconnect.ui.society.MembersActivity
 import com.societyconnect.ui.society.SubscriptionActivity
+import com.societyconnect.data.firebase.AuthRepository
 import com.societyconnect.utils.SessionManager
 
 class MainActivity : AppCompatActivity() {
@@ -117,6 +120,9 @@ class MainActivity : AppCompatActivity() {
             .setTitle("Logout")
             .setMessage("Are you sure you want to logout?")
             .setPositiveButton("Logout") { _, _ ->
+                AuthRepository().signOut()
+                val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()
+                GoogleSignIn.getClient(this, gso).signOut()
                 session.logout()
                 startActivity(Intent(this, LoginActivity::class.java))
                 finishAffinity()
