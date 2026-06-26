@@ -1,6 +1,5 @@
 package com.societyconnect.ui.maintenance
 
-import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,8 +11,8 @@ import kotlinx.coroutines.launch
 class MaintenanceViewModel : ViewModel() {
     private lateinit var repo: SocietyRepository
 
-    fun init(context: Context) {
-        if (!::repo.isInitialized) repo = SocietyRepository(context)
+    fun init(societyId: String) {
+        if (!::repo.isInitialized) repo = SocietyRepository(societyId)
     }
 
     val allMaintenance get() = repo.allMaintenance
@@ -41,7 +40,6 @@ class MaintenanceViewModel : ViewModel() {
     val bulkResult = MutableLiveData<String>()
 
     fun generateBulk(
-        societyId: String,
         month: String,
         dueDate: Long,
         mode: String,
@@ -49,7 +47,7 @@ class MaintenanceViewModel : ViewModel() {
         sizeAmounts: Map<String, Double>
     ) = viewModelScope.launch {
         val (generated, skipped) = repo.generateBulkMaintenance(
-            societyId, month, dueDate, mode, sameAmount, sizeAmounts
+            month, dueDate, mode, sameAmount, sizeAmounts
         )
         bulkResult.postValue(
             when {

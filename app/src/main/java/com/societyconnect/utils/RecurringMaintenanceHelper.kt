@@ -1,6 +1,5 @@
 package com.societyconnect.utils
 
-import android.content.Context
 import com.societyconnect.data.repository.SocietyRepository
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -20,8 +19,8 @@ import java.util.Locale
  */
 object RecurringMaintenanceHelper {
 
-    suspend fun checkAndGenerate(context: Context, societyId: String): String? {
-        val repo = SocietyRepository(context)
+    suspend fun checkAndGenerate(societyId: String): String? {
+        val repo = SocietyRepository(societyId)
         val config = repo.getRecurringConfig() ?: return null
 
         if (!config.isEnabled) return null
@@ -48,7 +47,6 @@ object RecurringMaintenanceHelper {
         )
 
         val (generated, _) = repo.generateBulkMaintenance(
-            societyId = societyId,
             month = currentMonth,
             dueDate = dueDate,
             mode = config.mode,

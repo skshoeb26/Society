@@ -1,6 +1,5 @@
 package com.societyconnect.ui.emergency
 
-import android.content.Context
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.app.AlertDialog
@@ -41,7 +40,7 @@ class EmergencyFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         session = SessionManager(requireContext())
         viewModel = ViewModelProvider(this)[EmergencyViewModel::class.java]
-        viewModel.init(requireContext())
+        viewModel.init(session.getSocietyId())
 
         adapter = EmergencyAdapter(
             isAdmin = session.isAdmin(),
@@ -105,7 +104,7 @@ class EmergencyFragment : Fragment() {
 // ─── ViewModel ────────────────────────────────────────────────────────
 class EmergencyViewModel : ViewModel() {
     private lateinit var repo: SocietyRepository
-    fun init(context: Context) { if (!::repo.isInitialized) repo = SocietyRepository(context) }
+    fun init(societyId: String) { if (!::repo.isInitialized) repo = SocietyRepository(societyId) }
 
     val allContacts get() = repo.allEmergencyContacts
     fun addContact(c: EmergencyContact) = viewModelScope.launch { repo.addEmergencyContact(c) }

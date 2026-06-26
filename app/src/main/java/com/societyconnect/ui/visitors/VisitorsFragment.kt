@@ -1,6 +1,5 @@
 package com.societyconnect.ui.visitors
 
-import android.content.Context
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
@@ -40,7 +39,7 @@ class VisitorsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         session = SessionManager(requireContext())
         viewModel = ViewModelProvider(this)[VisitorsViewModel::class.java]
-        viewModel.init(requireContext())
+        viewModel.init(session.getSocietyId())
 
         adapter = VisitorsAdapter(
             canCheckOut = session.isSecurity() || session.isAdmin(),
@@ -107,7 +106,7 @@ class VisitorsFragment : Fragment() {
 // ─── ViewModel ────────────────────────────────────────────────────────
 class VisitorsViewModel : ViewModel() {
     private lateinit var repo: SocietyRepository
-    fun init(context: Context) { if (!::repo.isInitialized) repo = SocietyRepository(context) }
+    fun init(societyId: String) { if (!::repo.isInitialized) repo = SocietyRepository(societyId) }
 
     val allVisitors get() = repo.allVisitors
     val todayCount get() = repo.todayVisitorCount

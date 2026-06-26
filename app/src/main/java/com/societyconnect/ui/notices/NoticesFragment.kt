@@ -1,6 +1,5 @@
 package com.societyconnect.ui.notices
 
-import android.content.Context
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.app.AlertDialog
@@ -40,7 +39,7 @@ class NoticesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         session = SessionManager(requireContext())
         viewModel = ViewModelProvider(this)[NoticesViewModel::class.java]
-        viewModel.init(requireContext())
+        viewModel.init(session.getSocietyId())
 
         adapter = NoticesAdapter(
             isAdmin = session.canManageContent(),
@@ -102,7 +101,7 @@ class NoticesFragment : Fragment() {
 // ─── ViewModel ────────────────────────────────────────────────────────
 class NoticesViewModel : ViewModel() {
     private lateinit var repo: SocietyRepository
-    fun init(context: Context) { if (!::repo.isInitialized) repo = SocietyRepository(context) }
+    fun init(societyId: String) { if (!::repo.isInitialized) repo = SocietyRepository(societyId) }
 
     val allNotices get() = repo.allNotices
     fun addNotice(n: Notice) = viewModelScope.launch { repo.addNotice(n) }

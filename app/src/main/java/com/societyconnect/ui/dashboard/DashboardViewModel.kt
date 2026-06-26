@@ -1,14 +1,13 @@
 package com.societyconnect.ui.dashboard
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.societyconnect.data.repository.SocietyRepository
 
 class DashboardViewModel : ViewModel() {
     private lateinit var repo: SocietyRepository
 
-    fun init(context: Context) {
-        if (!::repo.isInitialized) repo = SocietyRepository(context)
+    fun init(societyId: String) {
+        if (!::repo.isInitialized) repo = SocietyRepository(societyId)
     }
 
     val pendingCount get() = repo.pendingCount

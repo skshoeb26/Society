@@ -6,6 +6,10 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
+import com.societyconnect.data.models.FirestoreEntity
+
+fun <T : FirestoreEntity> QuerySnapshot.toEntities(clazz: Class<T>): List<T> =
+    documents.mapNotNull { d -> d.toObject(clazz)?.also { it.id = d.id } }
 
 class FirestoreDocumentLiveData<T>(
     private val ref: DocumentReference,

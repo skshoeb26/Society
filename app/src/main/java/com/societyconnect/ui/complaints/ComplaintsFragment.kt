@@ -31,7 +31,7 @@ class ComplaintsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         session = SessionManager(requireContext())
         viewModel = ViewModelProvider(this)[ComplaintsViewModel::class.java]
-        viewModel.init(requireContext())
+        viewModel.init(session.getSocietyId())
 
         adapter = ComplaintsAdapter(
             isAdmin = session.isAdmin(),
@@ -98,7 +98,8 @@ class ComplaintsFragment : Fragment() {
                     description = desc,
                     category = selectedCategory,
                     flatNo = session.getFlatNo(),
-                    raisedBy = session.getName()
+                    raisedBy = session.getName(),
+                    raisedByUid = session.getUserId()
                 )
             )
             requireContext().toast("Complaint submitted")

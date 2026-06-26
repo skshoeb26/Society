@@ -32,7 +32,7 @@ class MaintenanceFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         session = SessionManager(requireContext())
         viewModel = ViewModelProvider(this)[MaintenanceViewModel::class.java]
-        viewModel.init(requireContext())
+        viewModel.init(session.getSocietyId())
 
         adapter = MaintenanceAdapter(
             isAdmin = session.isAdmin(),

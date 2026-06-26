@@ -1,6 +1,5 @@
 package com.societyconnect.ui.complaints
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,8 +22,8 @@ import kotlinx.coroutines.launch
 class ComplaintsViewModel : ViewModel() {
     private lateinit var repo: SocietyRepository
 
-    fun init(context: Context) {
-        if (!::repo.isInitialized) repo = SocietyRepository(context)
+    fun init(societyId: String) {
+        if (!::repo.isInitialized) repo = SocietyRepository(societyId)
     }
 
     val allComplaints get() = repo.allComplaints

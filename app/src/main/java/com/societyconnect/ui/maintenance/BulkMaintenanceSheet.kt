@@ -31,6 +31,7 @@ class BulkMaintenanceSheet : BottomSheetDialogFragment() {
     private var _binding: BottomSheetBulkMaintenanceBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel: MaintenanceViewModel
+    private lateinit var societyId: String
 
     private var selectedDueDate: Long = 0L
     private var mode = "SAME"   // ya "BY_SIZE"
@@ -45,8 +46,9 @@ class BulkMaintenanceSheet : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // Apna khud ka ViewModel (fragment-scoped) — repo wahi DB use karta hai
+        societyId = SessionManager(requireContext()).getSocietyId()
         viewModel = ViewModelProvider(this)[MaintenanceViewModel::class.java]
-        viewModel.init(requireContext())
+        viewModel.init(societyId)
 
         // Default month = current month
         val monthFmt = SimpleDateFormat("MMMM yyyy", Locale.ENGLISH)
@@ -142,14 +144,12 @@ class BulkMaintenanceSheet : BottomSheetDialogFragment() {
         }
 
         // Generate maintenance for all flats
-        val societyId = SessionManager(requireContext()).getSocietyId()
-        viewModel.generateBulk(societyId, month, selectedDueDate, mode, sameAmount, sizeAmounts)
+        viewModel.generateBulk(month, selectedDueDate, mode, sameAmount, sizeAmounts)
 
         // Recurring config save karo
         if (binding.switchRecurring.isChecked) {
             viewModel.saveRecurring(
                 RecurringConfig(
-                    id = 1,
                     isEnabled = true,
                     mode = mode,
                     sameAmount = sameAmount,

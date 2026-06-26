@@ -37,7 +37,7 @@ class DashboardFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         session = SessionManager(requireContext())
         viewModel = ViewModelProvider(this)[DashboardViewModel::class.java]
-        viewModel.init(requireContext())
+        viewModel.init(session.getSocietyId())
 
         // Greeting
         binding.tvGreeting.text = "${getGreeting()},"
@@ -104,7 +104,7 @@ class DashboardFragment : Fragment() {
         // Naya mahina aaya toh apne aap sab flats ka maintenance ban jaata hai
         if (session.isAdmin()) {
             viewLifecycleOwner.lifecycleScope.launch {
-                val result = RecurringMaintenanceHelper.checkAndGenerate(requireContext(), session.getSocietyId())
+                val result = RecurringMaintenanceHelper.checkAndGenerate(session.getSocietyId())
                 result?.let { requireContext().toast(it) }
             }
         }

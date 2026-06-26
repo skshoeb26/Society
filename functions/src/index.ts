@@ -32,6 +32,13 @@ export const createSociety = onCall(async (request) => {
   const inviteCode = generateInviteCode();
   const now = FieldValue.serverTimestamp();
 
+  const defaultEmergencyContacts = [
+    { name: "Police", phone: "100", type: "POLICE", isDefault: true },
+    { name: "Fire Brigade", phone: "101", type: "FIRE", isDefault: true },
+    { name: "Ambulance", phone: "108", type: "MEDICAL", isDefault: true },
+    { name: "Women Helpline", phone: "1091", type: "POLICE", isDefault: true },
+  ];
+
   await db.runTransaction(async (tx) => {
     tx.set(societyRef, {
       name,
@@ -55,6 +62,9 @@ export const createSociety = onCall(async (request) => {
       flatType,
       fcmToken: null,
       createdAt: now,
+    });
+    defaultEmergencyContacts.forEach((contact) => {
+      tx.set(societyRef.collection("emergencyContacts").doc(), contact);
     });
   });
 
