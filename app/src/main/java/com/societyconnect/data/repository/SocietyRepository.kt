@@ -177,7 +177,11 @@ class SocietyRepository(private val societyId: String) {
         ) { it.toEntities(Visitor::class.java) }
 
     val activeVisitors: LiveData<List<Visitor>> = allVisitors.map { list ->
-        list.filter { it.checkOut == null }
+        list.filter { it.status == "APPROVED" && it.checkIn != null && it.checkOut == null }
+    }
+
+    val pendingVisitors: LiveData<List<Visitor>> = allVisitors.map { list ->
+        list.filter { it.status == "PENDING" }
     }
 
     val todayVisitorCount: LiveData<Int> = allVisitors.map { list ->
@@ -187,7 +191,7 @@ class SocietyRepository(private val societyId: String) {
             set(Calendar.SECOND, 0)
             set(Calendar.MILLISECOND, 0)
         }.timeInMillis
-        list.count { it.checkIn >= startOfDay }
+        list.count { it.checkIn != null && it.checkIn >= startOfDay }
     }
 
     fun getVisitorsByFlat(flatNo: String): LiveData<List<Visitor>> =
@@ -197,11 +201,17 @@ class SocietyRepository(private val societyId: String) {
                 .orderBy("checkIn", Query.Direction.DESCENDING)
         ) { it.toEntities(Visitor::class.java) }
 
-    suspend fun addVisitor(v: Visitor) {
-        societyRef.collection("visitors").add(v).await()
+    suspend fun addVisitor(v: Visitor): String {
+        val ref = societyRef.collection("visitors").add(v).await()
+        return ref.id
     }
     suspend fun updateVisitor(v: Visitor) {
         societyRef.collection("visitors").document(v.id).set(v).await()
+    }
+    suspend fun getVisitor(visitorId: String): Visitor? {
+        val snap = societyRef.collection("visitors").document(visitorId).get().await()
+        if (!snap.exists()) return null
+        return snap.toObject(Visitor::class.java)?.also { it.id = snap.id }
     }
 
     // Emergency

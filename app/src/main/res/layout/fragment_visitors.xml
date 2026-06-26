@@ -17,8 +17,14 @@
                 android:textColor="@color/text_secondary" android:textSize="16sp" android:layout_marginTop="8dp"/>
         </LinearLayout>
     </LinearLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabScan" android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end" android:layout_margin="16dp" android:layout_marginBottom="88dp"
+        app:srcCompat="@drawable/ic_qr_scan" android:contentDescription="Scan QR" android:backgroundTint="@color/primary"
+        android:visibility="gone"/>
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fabAdd" android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:layout_gravity="bottom|end" android:layout_margin="16dp"
-        android:text="Log Visitor" app:icon="@drawable/ic_add" android:backgroundTint="@color/secondary"/>
+        android:text="Log Visitor" app:icon="@drawable/ic_add" android:backgroundTint="@color/secondary"
+        android:visibility="gone"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

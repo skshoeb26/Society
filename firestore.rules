@@ -99,11 +99,22 @@ service cloud.firestore {
       }
 
       // ── visitors ─────────────────────────────────────────────────────
-      // Security/Admin log entries and check out. A resident/committee
-      // member may only approve or deny a visitor for their own flat.
+      // Security/Admin log walk-in entries and check guests out. A
+      // resident/committee member may approve or deny a visitor for their
+      // own flat, and may also self-create a pre-approved QR invite for
+      // their own flat (status locked to APPROVED, checkIn unset until the
+      // QR is scanned at the gate) — they can't pre-approve on anyone
+      // else's behalf.
       match /visitors/{visitorId} {
         allow read: if inSociety(societyId);
-        allow create: if inSociety(societyId) && hasRole(['ADMIN', 'SECURITY']);
+        allow create: if inSociety(societyId) && (
+          hasRole(['ADMIN', 'SECURITY']) ||
+          (hasRole(['RESIDENT', 'COMMITTEE']) &&
+            request.resource.data.visitingFlat == myProfile().flatNo &&
+            request.resource.data.preApproved == true &&
+            request.resource.data.status == 'APPROVED' &&
+            request.resource.data.checkIn == null)
+        );
         allow update: if inSociety(societyId) && (
           hasRole(['ADMIN', 'SECURITY']) ||
           (hasRole(['RESIDENT', 'COMMITTEE']) && resource.data.visitingFlat == myProfile().flatNo)

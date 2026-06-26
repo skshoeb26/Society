@@ -60,7 +60,10 @@ data class Visitor(
     val purpose: String = "",
     val vehicleNo: String = "",
     val loggedBy: String = "",
-    val checkIn: Long = System.currentTimeMillis(),
+    val status: String = "PENDING",       // PENDING, APPROVED, DENIED
+    val preApproved: Boolean = false,     // true = resident pre-invited via QR, auto-approved
+    val createdAt: Long = System.currentTimeMillis(),
+    val checkIn: Long? = null,            // set when the visitor actually arrives at the gate
     val checkOut: Long? = null
 ) : FirestoreEntity {
     @get:Exclude @set:Exclude

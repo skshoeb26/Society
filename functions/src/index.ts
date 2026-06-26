@@ -237,13 +237,37 @@ export const onVisitorCreated = onDocumentCreated(
   "societies/{societyId}/visitors/{visitorId}",
   async (event) => {
     const visitor = event.data?.data();
-    if (!visitor) return;
+    // Pre-approved QR invites are created by the resident themselves, ahead
+    // of arrival — nothing to notify them about until the guest is scanned in.
+    if (!visitor || visitor.preApproved) return;
     const societyId = event.params.societyId;
     const tokens = await getTokensForFlat(societyId, visitor.visitingFlat);
     await sendToTokens(
       tokens,
       "Visitor at the gate",
       `${visitor.visitorName} is here to see Flat ${visitor.visitingFlat}`,
+      { channel: "visitors", societyId }
+    );
+  }
+);
+
+export const onVisitorUpdated = onDocumentUpdated(
+  "societies/{societyId}/visitors/{visitorId}",
+  async (event) => {
+    const before = event.data?.before.data();
+    const after = event.data?.after.data();
+    if (!before || !after || before.status === after.status) return;
+    // Only walk-in decisions need to reach the gate — pre-approved guests
+    // are already APPROVED at creation, so there's no decision to relay.
+    if (after.preApproved || after.status === "PENDING") return;
+
+    const societyId = event.params.societyId;
+    const tokens = await getTokensForSociety(societyId, ["ADMIN", "SECURITY"]);
+    const decision = after.status === "APPROVED" ? "approved" : "denied";
+    await sendToTokens(
+      tokens,
+      "Visitor decision",
+      `Flat ${after.visitingFlat} ${decision} ${after.visitorName}`,
       { channel: "visitors", societyId }
     );
   }

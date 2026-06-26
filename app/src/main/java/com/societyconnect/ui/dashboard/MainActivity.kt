@@ -54,11 +54,6 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfig)
         binding.bottomNav.setupWithNavController(navController)
 
-        // Hide visitors tab for residents/committee (only security + secretary log visitors)
-        if (!session.isAdmin() && !session.isSecurity()) {
-            binding.bottomNav.menu.findItem(R.id.visitorsFragment)?.isVisible = false
-        }
-
         navController.addOnDestinationChangedListener { _, dest, _ ->
             supportActionBar?.title = when (dest.id) {
                 R.id.dashboardFragment -> session.getSociety().ifEmpty { "Society Connect" }
