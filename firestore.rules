@@ -162,6 +162,29 @@ service cloud.firestore {
            (resource.data.bookedByUid == request.auth.uid && resource.data.status == 'PENDING'));
         allow delete: if false;
       }
+
+      // ── events ───────────────────────────────────────────────────────
+      match /events/{eventId} {
+        allow read: if inSociety(societyId);
+        allow create, update, delete: if inSociety(societyId) && hasRole(['ADMIN', 'COMMITTEE']);
+      }
+
+      // ── polls ────────────────────────────────────────────────────────
+      // Every member can read & vote — one vote each, enforced by the
+      // vote doc's ID equalling the voter's own uid (re-voting overwrites
+      // their own doc, never anyone else's). Only the secretary/committee
+      // create, close, or delete a poll; votes are rejected once closed.
+      match /polls/{pollId} {
+        allow read: if inSociety(societyId);
+        allow create, update, delete: if inSociety(societyId) && hasRole(['ADMIN', 'COMMITTEE']);
+
+        match /votes/{voterUid} {
+          allow read: if inSociety(societyId);
+          allow create, update: if inSociety(societyId) && request.auth.uid == voterUid
+            && get(/databases/$(database)/documents/societies/$(societyId)/polls/$(pollId)).data.isClosed == false;
+          allow delete: if false;
+        }
+      }
     }
 
     // Default deny for anything not explicitly matched above.

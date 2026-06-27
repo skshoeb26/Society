@@ -127,6 +127,11 @@
     <string name="poll_question">Poll Question</string>
     <string name="view_results">View Results</string>
     <string name="close_poll">Close Poll</string>
+    <string name="no_events">No events yet</string>
+    <string name="no_polls">No polls yet</string>
+    <string name="poll_closed">Closed</string>
+    <string name="poll_open">Open</string>
+    <string name="vote">Vote</string>
 
     <!-- Profile -->
     <string name="edit_profile">Edit Profile</string>

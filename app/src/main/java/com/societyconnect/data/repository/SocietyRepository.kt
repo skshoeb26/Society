@@ -302,4 +302,41 @@ class SocietyRepository(private val societyId: String) {
     suspend fun updateBooking(b: Booking) {
         societyRef.collection("bookings").document(b.id).set(b).await()
     }
+
+    // ─── EVENTS ──────────────────────────────────────────────────────────────
+    val allEvents: LiveData<List<Event>> =
+        FirestoreQueryLiveData(
+            societyRef.collection("events").orderBy("date", Query.Direction.ASCENDING)
+        ) { it.toEntities(Event::class.java) }
+
+    suspend fun addEvent(e: Event) {
+        societyRef.collection("events").add(e).await()
+    }
+    suspend fun deleteEvent(e: Event) {
+        societyRef.collection("events").document(e.id).delete().await()
+    }
+
+    // ─── POLLS ───────────────────────────────────────────────────────────────
+    val allPolls: LiveData<List<Poll>> =
+        FirestoreQueryLiveData(
+            societyRef.collection("polls").orderBy("createdAt", Query.Direction.DESCENDING)
+        ) { it.toEntities(Poll::class.java) }
+
+    suspend fun addPoll(p: Poll) {
+        societyRef.collection("polls").add(p).await()
+    }
+    suspend fun closePoll(p: Poll) {
+        societyRef.collection("polls").document(p.id).update("isClosed", true).await()
+    }
+    suspend fun deletePoll(p: Poll) {
+        societyRef.collection("polls").document(p.id).delete().await()
+    }
+    suspend fun getPollVotes(pollId: String): List<PollVote> =
+        societyRef.collection("polls").document(pollId).collection("votes")
+            .get().await().toEntities(PollVote::class.java)
+
+    suspend fun castVote(pollId: String, uid: String, optionIndex: Int) {
+        societyRef.collection("polls").document(pollId).collection("votes")
+            .document(uid).set(PollVote(optionIndex = optionIndex)).await()
+    }
 }

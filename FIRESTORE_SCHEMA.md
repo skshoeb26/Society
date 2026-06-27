@@ -64,6 +64,15 @@ Single doc (doc ID literally `default`). `isEnabled, mode, sameAmount, amount1BH
 ### `/societies/{societyId}/bookings/{bookingId}`
 `amenityId, amenityName, flatNo, bookedBy, bookedByUid, date, slot, status (PENDING|APPROVED|DENIED|CANCELLED), createdAt`
 
+### `/societies/{societyId}/events/{eventId}`
+`title, description, location, date, postedBy, createdAt`
+
+### `/societies/{societyId}/polls/{pollId}`
+`question, options (array<string>), postedBy, isClosed, createdAt`
+
+### `/societies/{societyId}/polls/{pollId}/votes/{voterUid}`
+One doc per voter, doc ID == voter's uid — re-voting overwrites their own doc, which is what enforces one vote per resident. `optionIndex, votedAt`
+
 ## Why subcollections under `/societies/{id}` instead of top-level collections with a `societyId` field
 
 Structural isolation: a security rule that says "you may only read/write
@@ -91,7 +100,6 @@ See `/functions/src/auth.ts`.
 - Multi-society membership per user (owns flats in 2 societies) → would
   need `societyMemberships: [...]` array on `/users/{uid}` instead of a
   single `societyId`. Deferred until there's a real customer who needs it.
-- Phase 2+ adds sibling subcollections (`agms`, `events`,
-  `assets`, `vendors`, `staff`, `inventory`, `documents`,
-  `polls`, `auditLogs`) under the same `/societies/{id}` parent — additive,
-  no rework of this schema needed.
+- Phase 3+ adds sibling subcollections (`agms`, `assets`, `vendors`, `staff`,
+  `inventory`, `documents`, `auditLogs`) under the same `/societies/{id}`
+  parent — additive, no rework of this schema needed.

@@ -134,6 +134,40 @@ data class Booking(
     override var id: String = ""
 }
 
+// ─── EVENT ──────────────────────────────────────────────────────────
+data class Event(
+    val title: String = "",
+    val description: String = "",
+    val location: String = "",
+    val date: Long = System.currentTimeMillis(),
+    val postedBy: String = "",
+    val createdAt: Long = System.currentTimeMillis()
+) : FirestoreEntity {
+    @get:Exclude @set:Exclude
+    override var id: String = ""
+}
+
+// ─── POLL ───────────────────────────────────────────────────────────
+data class Poll(
+    val question: String = "",
+    val options: List<String> = emptyList(),
+    val postedBy: String = "",
+    val isClosed: Boolean = false,
+    val createdAt: Long = System.currentTimeMillis()
+) : FirestoreEntity {
+    @get:Exclude @set:Exclude
+    override var id: String = ""
+}
+
+// ─── POLL VOTE (one doc per voter, doc ID == voter's uid) ─────────────
+data class PollVote(
+    val optionIndex: Int = 0,
+    val votedAt: Long = System.currentTimeMillis()
+) : FirestoreEntity {
+    @get:Exclude @set:Exclude
+    override var id: String = ""
+}
+
 // ─── RECURRING MAINTENANCE CONFIG ─────────────────────────────────────
 // Secretary ek baar set karta hai, har mahine auto-generate hota hai.
 // Stored as a single fixed document (societies/{societyId}/recurringConfig/default).

@@ -44,4 +44,9 @@
         android:name="com.societyconnect.ui.amenities.AmenitiesFragment"
         android:label="Amenities" />
 
+    <fragment
+        android:id="@+id/eventsPollsFragment"
+        android:name="com.societyconnect.ui.events.EventsPollsFragment"
+        android:label="Events &amp; Polls" />
+
 </navigation>
