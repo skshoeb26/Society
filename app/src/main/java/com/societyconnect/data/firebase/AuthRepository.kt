@@ -23,6 +23,20 @@ class AuthRepository {
             ?: throw IllegalStateException("Google sign-in failed")
     }
 
+    suspend fun signInWithEmail(email: String, password: String): FirebaseUser {
+        return auth.signInWithEmailAndPassword(email, password).await().user
+            ?: throw IllegalStateException("Sign-in failed")
+    }
+
+    suspend fun registerWithEmail(email: String, password: String): FirebaseUser {
+        return auth.createUserWithEmailAndPassword(email, password).await().user
+            ?: throw IllegalStateException("Account creation failed")
+    }
+
+    suspend fun sendPasswordResetEmail(email: String) {
+        auth.sendPasswordResetEmail(email).await()
+    }
+
     fun signOut() = auth.signOut()
 
     suspend fun getMyProfile(): UserProfile? {

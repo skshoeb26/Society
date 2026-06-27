@@ -20,9 +20,19 @@
     <string name="invite_code">Invite Code</string>
     <string name="sign_in_with_google">Continue with Google</string>
     <string name="sign_in_subtitle">Sign in to Society Connect</string>
-    <string name="sign_in_helper">New here? Signing in with Google will set up your account — you\'ll create or join a society next.</string>
+    <string name="sign_in_helper">New here? Signing in will set up your account — you\'ll create or join a society next.</string>
     <string name="setup_society">Set up your society</string>
-    <string name="sign_out_different_account">Sign in with a different Google account</string>
+    <string name="sign_out_different_account">Sign in with a different account</string>
+    <string name="or_divider">OR</string>
+    <string name="sign_in">Sign In</string>
+    <string name="create_account">Create Account</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="reset_password_message">Enter your email and we\'ll send you a link to reset your password.</string>
+    <string name="send_reset_link">Send Reset Link</string>
+    <string name="reset_link_sent">Password reset link sent. Check your email.</string>
 
     <!-- Society / Subscription / Invite -->
     <string name="subscription">Subscription</string>
