@@ -112,6 +112,9 @@
     <string name="add_amenity">Add Amenity</string>
     <string name="booking_date">Date</string>
     <string name="booking_slot">Time Slot</string>
+    <string name="amenity_name">Amenity Name</string>
+    <string name="no_amenities">No amenities yet</string>
+    <string name="no_bookings">No bookings yet</string>
 
     <!-- Events &amp; Polls -->
     <string name="events_and_polls">Events &amp; Polls</string>

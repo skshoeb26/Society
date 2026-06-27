@@ -39,4 +39,9 @@
         android:name="com.societyconnect.ui.ledger.LedgerFragment"
         android:label="Society Ledger" />
 
+    <fragment
+        android:id="@+id/amenitiesFragment"
+        android:name="com.societyconnect.ui.amenities.AmenitiesFragment"
+        android:label="Amenities" />
+
 </navigation>

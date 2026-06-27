@@ -269,4 +269,37 @@ class SocietyRepository(private val societyId: String) {
     suspend fun deleteLedgerEntry(e: LedgerEntry) {
         societyRef.collection("ledger").document(e.id).delete().await()
     }
+
+    // ─── AMENITIES ───────────────────────────────────────────────────────────
+    val allAmenities: LiveData<List<Amenity>> =
+        FirestoreQueryLiveData(
+            societyRef.collection("amenities").orderBy("name", Query.Direction.ASCENDING)
+        ) { it.toEntities(Amenity::class.java) }
+
+    suspend fun addAmenity(a: Amenity) {
+        societyRef.collection("amenities").add(a).await()
+    }
+    suspend fun deleteAmenity(a: Amenity) {
+        societyRef.collection("amenities").document(a.id).delete().await()
+    }
+
+    // ─── BOOKINGS ────────────────────────────────────────────────────────────
+    val allBookings: LiveData<List<Booking>> =
+        FirestoreQueryLiveData(
+            societyRef.collection("bookings").orderBy("date", Query.Direction.DESCENDING)
+        ) { it.toEntities(Booking::class.java) }
+
+    fun getBookingsByUid(uid: String): LiveData<List<Booking>> =
+        FirestoreQueryLiveData(
+            societyRef.collection("bookings")
+                .whereEqualTo("bookedByUid", uid)
+                .orderBy("date", Query.Direction.DESCENDING)
+        ) { it.toEntities(Booking::class.java) }
+
+    suspend fun addBooking(b: Booking) {
+        societyRef.collection("bookings").add(b).await()
+    }
+    suspend fun updateBooking(b: Booking) {
+        societyRef.collection("bookings").document(b.id).set(b).await()
+    }
 }

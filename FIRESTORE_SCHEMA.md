@@ -58,6 +58,12 @@ Single doc (doc ID literally `default`). `isEnabled, mode, sameAmount, amount1BH
 ### `/societies/{societyId}/ledger/{entryId}`
 `type (INCOME|EXPENSE), category (MAINTENANCE|REPAIR|SALARY|UTILITY|EVENT|DONATION|OTHER), description, amount, date, addedBy, addedByUid, createdAt`
 
+### `/societies/{societyId}/amenities/{amenityId}`
+`name, category (CLUBHOUSE|GYM|POOL|COURT|GARDEN|HALL|OTHER), description, addedBy, createdAt`
+
+### `/societies/{societyId}/bookings/{bookingId}`
+`amenityId, amenityName, flatNo, bookedBy, bookedByUid, date, slot, status (PENDING|APPROVED|DENIED|CANCELLED), createdAt`
+
 ## Why subcollections under `/societies/{id}` instead of top-level collections with a `societyId` field
 
 Structural isolation: a security rule that says "you may only read/write
@@ -86,6 +92,6 @@ See `/functions/src/auth.ts`.
   need `societyMemberships: [...]` array on `/users/{uid}` instead of a
   single `societyId`. Deferred until there's a real customer who needs it.
 - Phase 2+ adds sibling subcollections (`agms`, `events`,
-  `amenities`, `bookings`, `assets`, `vendors`, `staff`, `inventory`, `documents`,
+  `assets`, `vendors`, `staff`, `inventory`, `documents`,
   `polls`, `auditLogs`) under the same `/societies/{id}` parent — additive,
   no rework of this schema needed.

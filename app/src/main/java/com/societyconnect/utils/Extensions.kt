@@ -147,6 +147,18 @@ fun getLedgerCategoryLabel(category: String): String {
     }
 }
 
+fun getAmenityIcon(category: String): String {
+    return when (category) {
+        "CLUBHOUSE" -> "🏛"
+        "GYM" -> "🏋"
+        "POOL" -> "🏊"
+        "COURT" -> "🎾"
+        "GARDEN" -> "🌳"
+        "HALL" -> "🏢"
+        else -> "📍"
+    }
+}
+
 fun getRoleLabel(role: String): String {
     return when (role) {
         "ADMIN" -> "Secretary"

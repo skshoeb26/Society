@@ -106,6 +106,34 @@ data class LedgerEntry(
     override var id: String = ""
 }
 
+// ─── AMENITY (bookable society facility) ──────────────────────────────
+data class Amenity(
+    val name: String = "",
+    val category: String = "OTHER",      // CLUBHOUSE, GYM, POOL, COURT, GARDEN, HALL, OTHER
+    val description: String = "",
+    val addedBy: String = "",
+    val createdAt: Long = System.currentTimeMillis()
+) : FirestoreEntity {
+    @get:Exclude @set:Exclude
+    override var id: String = ""
+}
+
+// ─── AMENITY BOOKING ───────────────────────────────────────────────────
+data class Booking(
+    val amenityId: String = "",
+    val amenityName: String = "",
+    val flatNo: String = "",
+    val bookedBy: String = "",
+    val bookedByUid: String = "",
+    val date: Long = System.currentTimeMillis(),
+    val slot: String = "",
+    val status: String = "PENDING",      // PENDING, APPROVED, DENIED, CANCELLED
+    val createdAt: Long = System.currentTimeMillis()
+) : FirestoreEntity {
+    @get:Exclude @set:Exclude
+    override var id: String = ""
+}
+
 // ─── RECURRING MAINTENANCE CONFIG ─────────────────────────────────────
 // Secretary ek baar set karta hai, har mahine auto-generate hota hai.
 // Stored as a single fixed document (societies/{societyId}/recurringConfig/default).

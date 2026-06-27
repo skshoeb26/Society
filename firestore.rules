@@ -142,6 +142,26 @@ service cloud.firestore {
         allow read: if inSociety(societyId);
         allow create, update, delete: if inSociety(societyId) && hasRole(['ADMIN', 'TREASURER']);
       }
+
+      // ── amenities (bookable facility catalog) ─────────────────────────
+      // Only the secretary/committee curate which facilities exist.
+      match /amenities/{amenityId} {
+        allow read: if inSociety(societyId);
+        allow create, update, delete: if inSociety(societyId) && hasRole(['ADMIN', 'COMMITTEE']);
+      }
+
+      // ── bookings ───────────────────────────────────────────────────────
+      // Any member can request a booking for themselves. The secretary or
+      // committee may approve/deny any request; a resident may cancel only
+      // their own request, and only while it's still pending.
+      match /bookings/{bookingId} {
+        allow read: if inSociety(societyId);
+        allow create: if inSociety(societyId) && request.resource.data.bookedByUid == request.auth.uid;
+        allow update: if inSociety(societyId) &&
+          (hasRole(['ADMIN', 'COMMITTEE']) ||
+           (resource.data.bookedByUid == request.auth.uid && resource.data.status == 'PENDING'));
+        allow delete: if false;
+      }
     }
 
     // Default deny for anything not explicitly matched above.

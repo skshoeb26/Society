@@ -82,6 +82,9 @@ class DashboardFragment : Fragment() {
         binding.cardLedger.setOnClickListener {
             findNavController().navigate(R.id.ledgerFragment)
         }
+        binding.cardAmenities.setOnClickListener {
+            findNavController().navigate(R.id.amenitiesFragment)
+        }
 
         // Hide admin-only stats from residents
         if (session.isResident()) {
