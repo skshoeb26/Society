@@ -203,3 +203,18 @@ fun getContactTypeIcon(type: String): String {
         else -> "📞"
     }
 }
+
+fun getDocumentCategoryLabel(category: String): String {
+    return when (category) {
+        "LEGAL" -> "⚖️ Legal"
+        "FINANCIAL" -> "💰 Financial"
+        "MINUTES" -> "📝 Minutes"
+        "INSURANCE" -> "🛡 Insurance"
+        else -> "📄 Other"
+    }
+}
+
+fun Long.toFileSizeString(): String {
+    val kb = this / 1024.0
+    return if (kb < 1024) "%.0f KB".format(kb) else "%.1f MB".format(kb / 1024)
+}

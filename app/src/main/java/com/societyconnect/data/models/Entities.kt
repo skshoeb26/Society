@@ -243,6 +243,21 @@ data class AgmRsvp(
     override var id: String = ""
 }
 
+// ─── SOCIETY DOCUMENT (shared document vault) ──────────────────────────
+data class SocietyDocument(
+    val title: String = "",
+    val category: String = "OTHER",   // LEGAL, FINANCIAL, MINUTES, INSURANCE, OTHER
+    val fileName: String = "",
+    val fileSize: Long = 0L,
+    val storagePath: String = "",
+    val downloadUrl: String = "",
+    val uploadedBy: String = "",
+    val uploadedAt: Long = System.currentTimeMillis()
+) : FirestoreEntity {
+    @get:Exclude @set:Exclude
+    override var id: String = ""
+}
+
 // ─── RECURRING MAINTENANCE CONFIG ─────────────────────────────────────
 // Secretary ek baar set karta hai, har mahine auto-generate hota hai.
 // Stored as a single fixed document (societies/{societyId}/recurringConfig/default).

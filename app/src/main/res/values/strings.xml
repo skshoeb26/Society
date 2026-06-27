@@ -200,6 +200,15 @@
     <string name="save_minutes">Save Minutes</string>
     <string name="mark_completed">Mark as Completed</string>
 
+    <!-- Documents -->
+    <string name="documents">Documents</string>
+    <string name="upload_document">Upload Document</string>
+    <string name="upload">Upload</string>
+    <string name="document_title">Document Title</string>
+    <string name="choose_file">Choose File</string>
+    <string name="no_file_chosen">No file chosen</string>
+    <string name="no_documents">No documents uploaded yet</string>
+
     <!-- Profile -->
     <string name="edit_profile">Edit Profile</string>
     <string name="edit_profile_subtitle">Update your details</string>

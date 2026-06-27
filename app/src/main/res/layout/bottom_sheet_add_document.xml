@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="wrap_content">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:padding="20dp">
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/upload_document" android:textColor="@color/text_primary"
+            android:textSize="18sp" android:textStyle="bold" android:layout_marginBottom="16dp"/>
+
+        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:hint="@string/document_title" android:layout_marginBottom="12dp"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/etTitle"
+                android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textCapSentences"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="Category" android:textColor="@color/text_secondary" android:textSize="13sp" android:layout_marginBottom="8dp"/>
+        <com.google.android.material.chip.ChipGroup android:id="@+id/chipGroupCategory"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp" app:singleSelection="true">
+            <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="📄 Other" android:tag="OTHER" android:checked="true" style="@style/Widget.Material3.Chip.Filter"/>
+            <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="⚖️ Legal" android:tag="LEGAL" style="@style/Widget.Material3.Chip.Filter"/>
+            <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="💰 Financial" android:tag="FINANCIAL" style="@style/Widget.Material3.Chip.Filter"/>
+            <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="📝 Minutes" android:tag="MINUTES" style="@style/Widget.Material3.Chip.Filter"/>
+            <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="🛡 Insurance" android:tag="INSURANCE" style="@style/Widget.Material3.Chip.Filter"/>
+        </com.google.android.material.chip.ChipGroup>
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="16dp">
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnChooseFile"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="@string/choose_file" style="@style/Widget.Material3.Button.OutlinedButton"/>
+            <TextView android:id="@+id/tvFileName" android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:layout_marginStart="12dp" android:text="@string/no_file_chosen"
+                android:textColor="@color/text_secondary" android:textSize="13sp" android:maxLines="1" android:ellipsize="middle"/>
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnCancel"
+                android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                android:layout_marginEnd="8dp" android:text="@string/cancel" style="@style/Widget.Material3.Button.OutlinedButton"/>
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnUpload"
+                android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                android:text="@string/upload" android:backgroundTint="@color/card_documents"/>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

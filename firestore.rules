@@ -223,6 +223,16 @@ service cloud.firestore {
           allow delete: if false;
         }
       }
+
+      // ── documents (shared document vault) ─────────────────────────────
+      // Every member can read/list document metadata. Only the secretary/
+      // committee upload, edit, or delete a document — Storage's own
+      // per-society rule stays broad (any signed-in member, <10MB), so this
+      // Firestore check is what actually keeps uploads restricted.
+      match /documents/{docId} {
+        allow read: if inSociety(societyId);
+        allow create, update, delete: if inSociety(societyId) && hasRole(['ADMIN', 'COMMITTEE']);
+      }
     }
 
     // Default deny for anything not explicitly matched above.

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:layout_marginHorizontal="16dp" android:layout_marginBottom="10dp"
+    app:cardCornerRadius="16dp" app:cardElevation="3dp" app:cardBackgroundColor="@color/white">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="horizontal" android:padding="16dp" android:gravity="center_vertical"
+        android:clickable="true" android:foreground="?attr/selectableItemBackground">
+        <TextView android:id="@+id/tvIcon" android:layout_width="48dp" android:layout_height="48dp"
+            android:gravity="center" android:text="📄" android:textSize="22sp"
+            android:background="@drawable/bg_circle_light" />
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:orientation="vertical" android:layout_marginStart="12dp">
+            <TextView android:id="@+id/tvTitle" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Society By-Laws" android:textColor="@color/text_primary" android:textSize="15sp" android:textStyle="bold"/>
+            <TextView android:id="@+id/tvCategory" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="⚖️ Legal" android:textColor="@color/primary" android:textSize="12sp" android:layout_marginTop="2dp"/>
+            <TextView android:id="@+id/tvMeta" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="245 KB · 10 Jun 2024" android:textColor="@color/text_tertiary" android:textSize="11sp" android:layout_marginTop="2dp"/>
+        </LinearLayout>
+        <com.google.android.material.button.MaterialButton android:id="@+id/btnDelete"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="✕" android:textSize="13sp" android:layout_marginStart="8dp"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            app:strokeColor="@color/status_pending" android:textColor="@color/status_pending" android:visibility="gone"/>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

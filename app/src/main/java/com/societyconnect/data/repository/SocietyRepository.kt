@@ -1,9 +1,11 @@
 package com.societyconnect.data.repository
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.storage.FirebaseStorage
 import com.societyconnect.data.firebase.AuthRepository
 import com.societyconnect.data.firebase.FirestoreDocumentLiveData
 import com.societyconnect.data.firebase.FirestoreQueryLiveData
@@ -408,5 +410,37 @@ class SocietyRepository(private val societyId: String) {
     suspend fun setAgmRsvp(agmId: String, uid: String, rsvp: AgmRsvp) {
         societyRef.collection("agm").document(agmId).collection("rsvps")
             .document(uid).set(rsvp).await()
+    }
+
+    // ─── DOCUMENTS ─────────────────────────────────────────────────────────────
+    private val storage = FirebaseStorage.getInstance()
+
+    val allDocuments: LiveData<List<SocietyDocument>> =
+        FirestoreQueryLiveData(
+            societyRef.collection("documents").orderBy("uploadedAt", Query.Direction.DESCENDING)
+        ) { it.toEntities(SocietyDocument::class.java) }
+
+    suspend fun uploadDocument(uri: Uri, fileName: String, fileSize: Long, title: String, category: String, uploadedBy: String) {
+        val docRef = societyRef.collection("documents").document()
+        val storagePath = "societies/$societyId/documents/${docRef.id}/$fileName"
+        val storageRef = storage.reference.child(storagePath)
+        storageRef.putFile(uri).await()
+        val downloadUrl = storageRef.downloadUrl.await().toString()
+        docRef.set(
+            SocietyDocument(
+                title = title,
+                category = category,
+                fileName = fileName,
+                fileSize = fileSize,
+                storagePath = storagePath,
+                downloadUrl = downloadUrl,
+                uploadedBy = uploadedBy
+            )
+        ).await()
+    }
+
+    suspend fun deleteDocument(doc: SocietyDocument) {
+        storage.reference.child(doc.storagePath).delete().await()
+        societyRef.collection("documents").document(doc.id).delete().await()
     }
 }
