@@ -64,4 +64,9 @@
         android:name="com.societyconnect.ui.reports.ReportsFragment"
         android:label="Reports" />
 
+    <fragment
+        android:id="@+id/agmFragment"
+        android:name="com.societyconnect.ui.agm.AgmFragment"
+        android:label="AGM" />
+
 </navigation>

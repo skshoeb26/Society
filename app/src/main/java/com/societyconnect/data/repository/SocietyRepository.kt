@@ -385,4 +385,28 @@ class SocietyRepository(private val societyId: String) {
         societyRef.collection("polls").document(pollId).collection("votes")
             .document(uid).set(PollVote(optionIndex = optionIndex)).await()
     }
+
+    // ─── AGM ─────────────────────────────────────────────────────────────────
+    val allAgmMeetings: LiveData<List<AgmMeeting>> =
+        FirestoreQueryLiveData(
+            societyRef.collection("agm").orderBy("date", Query.Direction.DESCENDING)
+        ) { it.toEntities(AgmMeeting::class.java) }
+
+    suspend fun addAgmMeeting(m: AgmMeeting) {
+        societyRef.collection("agm").add(m).await()
+    }
+    suspend fun updateAgmMeeting(m: AgmMeeting) {
+        societyRef.collection("agm").document(m.id).set(m).await()
+    }
+    suspend fun deleteAgmMeeting(m: AgmMeeting) {
+        societyRef.collection("agm").document(m.id).delete().await()
+    }
+    suspend fun getAgmRsvps(agmId: String): List<AgmRsvp> =
+        societyRef.collection("agm").document(agmId).collection("rsvps")
+            .get().await().toEntities(AgmRsvp::class.java)
+
+    suspend fun setAgmRsvp(agmId: String, uid: String, rsvp: AgmRsvp) {
+        societyRef.collection("agm").document(agmId).collection("rsvps")
+            .document(uid).set(rsvp).await()
+    }
 }

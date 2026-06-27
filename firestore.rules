@@ -206,6 +206,23 @@ service cloud.firestore {
           allow delete: if false;
         }
       }
+
+      // ── agm (Annual General Meeting) ──────────────────────────────────
+      // Every member can read meeting details and RSVP for themselves —
+      // one RSVP each, enforced by the RSVP doc's ID equalling the
+      // member's own uid (re-RSVPing overwrites their own doc, never
+      // anyone else's). Only the secretary/committee schedule a meeting,
+      // edit its agenda/minutes/status, or delete it.
+      match /agm/{agmId} {
+        allow read: if inSociety(societyId);
+        allow create, update, delete: if inSociety(societyId) && hasRole(['ADMIN', 'COMMITTEE']);
+
+        match /rsvps/{memberUid} {
+          allow read: if inSociety(societyId);
+          allow create, update: if inSociety(societyId) && request.auth.uid == memberUid;
+          allow delete: if false;
+        }
+      }
     }
 
     // Default deny for anything not explicitly matched above.

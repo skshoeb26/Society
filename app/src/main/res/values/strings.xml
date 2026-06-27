@@ -184,6 +184,22 @@
     <string name="staff_address">Address (Optional)</string>
     <string name="no_staff">No staff added yet</string>
 
+    <!-- AGM -->
+    <string name="agm">AGM</string>
+    <string name="schedule_agm">Schedule AGM</string>
+    <string name="agm_title">Meeting Title</string>
+    <string name="agm_venue">Venue (Optional)</string>
+    <string name="agm_time">Time (Optional, e.g. 10:00 AM)</string>
+    <string name="agm_agenda">Agenda — one item per line</string>
+    <string name="no_agm">No AGM scheduled yet</string>
+    <string name="agm_upcoming">Upcoming</string>
+    <string name="agm_completed">Completed</string>
+    <string name="rsvp_attending">I\'ll Attend</string>
+    <string name="rsvp_not_attending">Can\'t Attend</string>
+    <string name="agm_minutes">Minutes / Resolutions</string>
+    <string name="save_minutes">Save Minutes</string>
+    <string name="mark_completed">Mark as Completed</string>
+
     <!-- Profile -->
     <string name="edit_profile">Edit Profile</string>
     <string name="edit_profile_subtitle">Update your details</string>

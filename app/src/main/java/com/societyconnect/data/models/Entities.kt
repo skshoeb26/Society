@@ -216,6 +216,33 @@ data class StaffMember(
     override var id: String = ""
 }
 
+// ─── AGM MEETING (Annual General Meeting) ─────────────────────────────
+data class AgmMeeting(
+    val title: String = "",
+    val date: Long = System.currentTimeMillis(),
+    val time: String = "",
+    val venue: String = "",
+    val agenda: List<String> = emptyList(),
+    val status: String = "UPCOMING",     // UPCOMING, COMPLETED
+    val minutes: String = "",
+    val createdBy: String = "",
+    val createdAt: Long = System.currentTimeMillis()
+) : FirestoreEntity {
+    @get:Exclude @set:Exclude
+    override var id: String = ""
+}
+
+// ─── AGM RSVP (one doc per member, doc ID == member's uid) ────────────
+data class AgmRsvp(
+    val name: String = "",
+    val flatNo: String = "",
+    val attending: Boolean = true,
+    val respondedAt: Long = System.currentTimeMillis()
+) : FirestoreEntity {
+    @get:Exclude @set:Exclude
+    override var id: String = ""
+}
+
 // ─── RECURRING MAINTENANCE CONFIG ─────────────────────────────────────
 // Secretary ek baar set karta hai, har mahine auto-generate hota hai.
 // Stored as a single fixed document (societies/{societyId}/recurringConfig/default).
