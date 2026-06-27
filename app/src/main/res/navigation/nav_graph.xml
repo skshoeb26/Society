@@ -59,4 +59,9 @@
         android:name="com.societyconnect.ui.staff.StaffFragment"
         android:label="Staff" />
 
+    <fragment
+        android:id="@+id/reportsFragment"
+        android:name="com.societyconnect.ui.reports.ReportsFragment"
+        android:label="Reports" />
+
 </navigation>

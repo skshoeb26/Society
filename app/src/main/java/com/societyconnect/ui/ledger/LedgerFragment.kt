@@ -11,8 +11,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.chip.Chip
+import com.societyconnect.R
 import com.societyconnect.data.models.LedgerEntry
 import com.societyconnect.data.repository.SocietyRepository
 import com.societyconnect.databinding.BottomSheetAddLedgerEntryBinding
@@ -62,6 +64,10 @@ class LedgerFragment : Fragment() {
         binding.chipAll.setOnClickListener { applyFilter() }
         binding.chipIncome.setOnClickListener { applyFilter() }
         binding.chipExpense.setOnClickListener { applyFilter() }
+
+        binding.btnViewReports.setOnClickListener {
+            findNavController().navigate(R.id.reportsFragment)
+        }
 
         binding.fabAdd.visibility = if (canManage) View.VISIBLE else View.GONE
         binding.fabAdd.setOnClickListener { showAddSheet() }

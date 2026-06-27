@@ -115,6 +115,16 @@
     <string name="balance">Balance</string>
     <string name="entry_description">Description</string>
 
+    <!-- Reports -->
+    <string name="reports">Reports</string>
+    <string name="view_reports">📊 View Reports</string>
+    <string name="this_month">This Month</string>
+    <string name="last_3_months">Last 3 Months</string>
+    <string name="this_year">This Year</string>
+    <string name="all_time">All Time</string>
+    <string name="expense_by_category">Expense by Category</string>
+    <string name="no_data_for_period">No entries in this period</string>
+
     <!-- Amenities / Bookings -->
     <string name="amenities">Amenities</string>
     <string name="book_amenity">Book Amenity</string>
