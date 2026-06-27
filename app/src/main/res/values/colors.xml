@@ -32,6 +32,9 @@
     <color name="card_notices">#159A57</color>
     <color name="card_visitors">#2563EB</color>
     <color name="card_emergency">#E5484D</color>
+    <color name="card_ledger">#0D9488</color>
+    <color name="card_amenities">#7C3AED</color>
+    <color name="card_events">#DB2777</color>
 
     <!-- Light tint backgrounds (chips, badges) -->
     <color name="tint_green">#E2F3EA</color>

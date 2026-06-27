@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_margin="16dp" android:layout_marginBottom="8dp"
+            app:cardCornerRadius="20dp" app:cardElevation="4dp" app:cardBackgroundColor="@color/white">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:padding="16dp">
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="@string/total_income" android:textColor="@color/text_secondary" android:textSize="12sp"/>
+                    <TextView android:id="@+id/tvTotalIncome"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="₹0" android:textColor="@color/status_paid"
+                        android:textSize="16sp" android:textStyle="bold"/>
+                </LinearLayout>
+                <View android:layout_width="1dp" android:layout_height="36dp" android:background="@color/divider"/>
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="@string/total_expense" android:textColor="@color/text_secondary" android:textSize="12sp"/>
+                    <TextView android:id="@+id/tvTotalExpense"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="₹0" android:textColor="@color/status_pending"
+                        android:textSize="16sp" android:textStyle="bold"/>
+                </LinearLayout>
+                <View android:layout_width="1dp" android:layout_height="36dp" android:background="@color/divider"/>
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="@string/balance" android:textColor="@color/text_secondary" android:textSize="12sp"/>
+                    <TextView android:id="@+id/tvBalance"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="₹0" android:textColor="@color/primary"
+                        android:textSize="16sp" android:textStyle="bold"/>
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.chip.ChipGroup android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:paddingHorizontal="16dp"
+            android:paddingBottom="8dp" app:singleSelection="true">
+            <com.google.android.material.chip.Chip android:id="@+id/chipAll" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:text="@string/all" android:checked="true" style="@style/Widget.Material3.Chip.Filter"/>
+            <com.google.android.material.chip.Chip android:id="@+id/chipIncome" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:text="@string/income" style="@style/Widget.Material3.Chip.Filter"/>
+            <com.google.android.material.chip.Chip android:id="@+id/chipExpense" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:text="@string/expense" style="@style/Widget.Material3.Chip.Filter"/>
+        </com.google.android.material.chip.ChipGroup>
+
+        <androidx.recyclerview.widget.RecyclerView android:id="@+id/rvLedger"
+            android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"
+            android:paddingTop="4dp" android:paddingBottom="80dp" android:clipToPadding="false"/>
+
+        <LinearLayout android:id="@+id/emptyState" android:layout_width="match_parent"
+            android:layout_height="0dp" android:layout_weight="1" android:gravity="center"
+            android:orientation="vertical" android:visibility="gone">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="📒" android:textSize="48sp"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="No ledger entries yet" android:textColor="@color/text_secondary"
+                android:textSize="16sp" android:layout_marginTop="8dp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fabAdd" android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end" android:layout_margin="16dp"
+        android:text="@string/add_entry" app:icon="@drawable/ic_add" android:backgroundTint="@color/card_ledger"
+        android:visibility="gone"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

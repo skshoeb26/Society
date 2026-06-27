@@ -34,4 +34,9 @@
         android:name="com.societyconnect.ui.emergency.EmergencyFragment"
         android:label="Emergency Contacts" />
 
+    <fragment
+        android:id="@+id/ledgerFragment"
+        android:name="com.societyconnect.ui.ledger.LedgerFragment"
+        android:label="Society Ledger" />
+
 </navigation>

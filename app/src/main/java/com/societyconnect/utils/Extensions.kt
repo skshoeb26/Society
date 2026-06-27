@@ -135,6 +135,18 @@ fun getCategoryLabel(category: String): String {
     }
 }
 
+fun getLedgerCategoryLabel(category: String): String {
+    return when (category) {
+        "REPAIR" -> "🛠 Repair"
+        "SALARY" -> "💵 Salary"
+        "UTILITY" -> "⚡ Utility"
+        "EVENT" -> "🎉 Event"
+        "DONATION" -> "🎁 Donation"
+        "MAINTENANCE" -> "💰 Maintenance"
+        else -> "📋 Other"
+    }
+}
+
 fun getRoleLabel(role: String): String {
     return when (role) {
         "ADMIN" -> "Secretary"

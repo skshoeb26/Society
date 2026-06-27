@@ -91,6 +91,21 @@ data class EmergencyContact(
     override var id: String = ""
 }
 
+// ─── LEDGER ENTRY (society income / expense) ──────────────────────────
+data class LedgerEntry(
+    val type: String = "EXPENSE",        // INCOME, EXPENSE
+    val category: String = "OTHER",      // MAINTENANCE, REPAIR, SALARY, UTILITY, EVENT, DONATION, OTHER
+    val description: String = "",
+    val amount: Double = 0.0,
+    val date: Long = System.currentTimeMillis(),
+    val addedBy: String = "",
+    val addedByUid: String = "",
+    val createdAt: Long = System.currentTimeMillis()
+) : FirestoreEntity {
+    @get:Exclude @set:Exclude
+    override var id: String = ""
+}
+
 // ─── RECURRING MAINTENANCE CONFIG ─────────────────────────────────────
 // Secretary ek baar set karta hai, har mahine auto-generate hota hai.
 // Stored as a single fixed document (societies/{societyId}/recurringConfig/default).

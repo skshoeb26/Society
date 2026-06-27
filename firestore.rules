@@ -134,6 +134,14 @@ service cloud.firestore {
         allow create, update: if inSociety(societyId) && hasRole(['ADMIN']);
         allow delete: if false;
       }
+
+      // ── ledger ───────────────────────────────────────────────────────
+      // Every member can read the books (financial transparency); only
+      // the secretary/treasurer can record income or expense entries.
+      match /ledger/{entryId} {
+        allow read: if inSociety(societyId);
+        allow create, update, delete: if inSociety(societyId) && hasRole(['ADMIN', 'TREASURER']);
+      }
     }
 
     // Default deny for anything not explicitly matched above.

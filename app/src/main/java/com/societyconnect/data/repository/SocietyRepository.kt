@@ -243,4 +243,30 @@ class SocietyRepository(private val societyId: String) {
     suspend fun deleteEmergencyContact(e: EmergencyContact) {
         societyRef.collection("emergencyContacts").document(e.id).delete().await()
     }
+
+    // ─── LEDGER ────────────────────────────────────────────────────────────
+    val allLedgerEntries: LiveData<List<LedgerEntry>> =
+        FirestoreQueryLiveData(
+            societyRef.collection("ledger").orderBy("date", Query.Direction.DESCENDING)
+        ) { it.toEntities(LedgerEntry::class.java) }
+
+    val totalIncome: LiveData<Double> = allLedgerEntries.map { list ->
+        list.filter { it.type == "INCOME" }.sumOf { it.amount }
+    }
+    val totalExpense: LiveData<Double> = allLedgerEntries.map { list ->
+        list.filter { it.type == "EXPENSE" }.sumOf { it.amount }
+    }
+    val ledgerBalance: LiveData<Double> = allLedgerEntries.map { list ->
+        list.sumOf { if (it.type == "INCOME") it.amount else -it.amount }
+    }
+
+    suspend fun addLedgerEntry(e: LedgerEntry) {
+        societyRef.collection("ledger").add(e).await()
+    }
+    suspend fun updateLedgerEntry(e: LedgerEntry) {
+        societyRef.collection("ledger").document(e.id).set(e).await()
+    }
+    suspend fun deleteLedgerEntry(e: LedgerEntry) {
+        societyRef.collection("ledger").document(e.id).delete().await()
+    }
 }

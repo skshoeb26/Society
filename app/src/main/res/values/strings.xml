@@ -95,6 +95,36 @@
     <string name="contact_number">Phone Number</string>
     <string name="contact_type">Type</string>
 
+    <!-- Ledger -->
+    <string name="ledger">Society Ledger</string>
+    <string name="income">Income</string>
+    <string name="expense">Expense</string>
+    <string name="add_entry">Add Entry</string>
+    <string name="total_income">Income</string>
+    <string name="total_expense">Expense</string>
+    <string name="balance">Balance</string>
+    <string name="entry_description">Description</string>
+
+    <!-- Amenities / Bookings -->
+    <string name="amenities">Amenities</string>
+    <string name="book_amenity">Book Amenity</string>
+    <string name="my_bookings">Bookings</string>
+    <string name="add_amenity">Add Amenity</string>
+    <string name="booking_date">Date</string>
+    <string name="booking_slot">Time Slot</string>
+
+    <!-- Events &amp; Polls -->
+    <string name="events_and_polls">Events &amp; Polls</string>
+    <string name="events">Events</string>
+    <string name="polls">Polls</string>
+    <string name="add_event">Add Event</string>
+    <string name="create_poll">Create Poll</string>
+    <string name="event_title">Event Title</string>
+    <string name="event_location">Location</string>
+    <string name="poll_question">Poll Question</string>
+    <string name="view_results">View Results</string>
+    <string name="close_poll">Close Poll</string>
+
     <!-- Profile -->
     <string name="edit_profile">Edit Profile</string>
     <string name="edit_profile_subtitle">Update your details</string>
