@@ -136,7 +136,7 @@ class ComplaintsFragment : Fragment() {
         AlertDialog.Builder(requireContext())
             .setTitle("Delete Complaint")
             .setMessage("Delete \"${c.title}\"?")
-            .setPositiveButton("Delete") { _, _ -> viewModel.deleteComplaint(c) }
+            .setPositiveButton("Delete") { _, _ -> viewModel.deleteComplaint(c); requireContext().toast("Complaint deleted") }
             .setNegativeButton("Cancel", null)
             .show()
     }

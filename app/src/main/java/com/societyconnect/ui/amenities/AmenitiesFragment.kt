@@ -63,8 +63,8 @@ class AmenitiesFragment : Fragment() {
         bookingAdapter = BookingAdapter(
             canManage = canManage,
             currentUid = currentUid,
-            onApprove = { viewModel.updateBooking(it.copy(status = "APPROVED").withId(it.id)) },
-            onDeny = { viewModel.updateBooking(it.copy(status = "DENIED").withId(it.id)) },
+            onApprove = { viewModel.updateBooking(it.copy(status = "APPROVED").withId(it.id)); requireContext().toast("Booking approved") },
+            onDeny = { viewModel.updateBooking(it.copy(status = "DENIED").withId(it.id)); requireContext().toast("Booking denied") },
             onCancel = { confirmCancelBooking(it) }
         )
 
@@ -175,7 +175,7 @@ class AmenitiesFragment : Fragment() {
         AlertDialog.Builder(requireContext())
             .setTitle("Delete Amenity")
             .setMessage("Remove \"${a.name}\"?")
-            .setPositiveButton("Delete") { _, _ -> viewModel.deleteAmenity(a) }
+            .setPositiveButton("Delete") { _, _ -> viewModel.deleteAmenity(a); requireContext().toast("Amenity removed") }
             .setNegativeButton("Cancel", null)
             .show()
     }
@@ -184,7 +184,7 @@ class AmenitiesFragment : Fragment() {
         AlertDialog.Builder(requireContext())
             .setTitle("Cancel Booking")
             .setMessage("Cancel your booking for \"${b.amenityName}\"?")
-            .setPositiveButton("Yes") { _, _ -> viewModel.updateBooking(b.copy(status = "CANCELLED").withId(b.id)) }
+            .setPositiveButton("Yes") { _, _ -> viewModel.updateBooking(b.copy(status = "CANCELLED").withId(b.id)); requireContext().toast("Booking cancelled") }
             .setNegativeButton("No", null)
             .show()
     }

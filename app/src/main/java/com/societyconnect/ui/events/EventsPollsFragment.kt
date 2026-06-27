@@ -228,7 +228,7 @@ class EventsPollsFragment : Fragment() {
         AlertDialog.Builder(requireContext())
             .setTitle("Delete Event")
             .setMessage("Remove \"${e.title}\"?")
-            .setPositiveButton("Delete") { _, _ -> viewModel.deleteEvent(e) }
+            .setPositiveButton("Delete") { _, _ -> viewModel.deleteEvent(e); requireContext().toast("Event deleted") }
             .setNegativeButton("Cancel", null)
             .show()
     }
@@ -237,7 +237,7 @@ class EventsPollsFragment : Fragment() {
         AlertDialog.Builder(requireContext())
             .setTitle("Delete Poll")
             .setMessage("Remove \"${p.question}\"?")
-            .setPositiveButton("Delete") { _, _ -> viewModel.deletePoll(p) }
+            .setPositiveButton("Delete") { _, _ -> viewModel.deletePoll(p); requireContext().toast("Poll deleted") }
             .setNegativeButton("Cancel", null)
             .show()
     }
@@ -246,7 +246,7 @@ class EventsPollsFragment : Fragment() {
         AlertDialog.Builder(requireContext())
             .setTitle("Close Poll")
             .setMessage("Close voting for \"${p.question}\"? This can't be undone.")
-            .setPositiveButton("Close") { _, _ -> viewModel.closePoll(p); onClosed() }
+            .setPositiveButton("Close") { _, _ -> viewModel.closePoll(p); requireContext().toast("Poll closed"); onClosed() }
             .setNegativeButton("Cancel", null)
             .show()
     }

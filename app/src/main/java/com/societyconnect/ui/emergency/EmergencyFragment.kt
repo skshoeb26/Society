@@ -51,7 +51,10 @@ class EmergencyFragment : Fragment() {
         binding.rvContacts.layoutManager = LinearLayoutManager(requireContext())
         binding.rvContacts.adapter = adapter
 
-        viewModel.allContacts.observe(viewLifecycleOwner) { adapter.submitList(it) }
+        viewModel.allContacts.observe(viewLifecycleOwner) { list ->
+            adapter.submitList(list)
+            binding.emptyState.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
+        }
 
         binding.fabAdd.visibility = if (session.isAdmin()) View.VISIBLE else View.GONE
         binding.fabAdd.setOnClickListener { showAddSheet() }
@@ -93,7 +96,7 @@ class EmergencyFragment : Fragment() {
         AlertDialog.Builder(requireContext())
             .setTitle("Delete Contact")
             .setMessage("Delete ${c.name}?")
-            .setPositiveButton("Delete") { _, _ -> viewModel.deleteContact(c) }
+            .setPositiveButton("Delete") { _, _ -> viewModel.deleteContact(c); requireContext().toast("Contact deleted") }
             .setNegativeButton("Cancel", null)
             .show()
     }

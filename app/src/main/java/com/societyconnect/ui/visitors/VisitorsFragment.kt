@@ -61,9 +61,9 @@ class VisitorsFragment : Fragment() {
                 session.isAdmin() ||
                     ((session.isResident() || session.isCommittee()) && v.visitingFlat == session.getFlatNo())
             },
-            onCheckOut = { viewModel.checkOut(it) },
-            onApprove = { viewModel.approve(it) },
-            onDeny = { viewModel.deny(it) }
+            onCheckOut = { viewModel.checkOut(it); requireContext().toast("${it.visitorName} checked out") },
+            onApprove = { viewModel.approve(it); requireContext().toast("Visitor approved") },
+            onDeny = { viewModel.deny(it); requireContext().toast("Visitor denied") }
         )
 
         binding.rvVisitors.layoutManager = LinearLayoutManager(requireContext())

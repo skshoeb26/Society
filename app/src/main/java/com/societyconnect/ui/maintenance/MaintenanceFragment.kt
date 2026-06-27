@@ -196,7 +196,7 @@ class MaintenanceFragment : Fragment() {
         AlertDialog.Builder(requireContext())
             .setTitle("Delete Due")
             .setMessage("Remove due for Flat ${m.flatNo}?")
-            .setPositiveButton("Delete") { _, _ -> viewModel.deleteMaintenance(m) }
+            .setPositiveButton("Delete") { _, _ -> viewModel.deleteMaintenance(m); requireContext().toast("Due removed") }
             .setNegativeButton("Cancel", null)
             .show()
     }

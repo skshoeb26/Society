@@ -122,7 +122,7 @@ class LedgerFragment : Fragment() {
         AlertDialog.Builder(requireContext())
             .setTitle("Delete Entry")
             .setMessage("Delete \"${e.description}\"?")
-            .setPositiveButton("Delete") { _, _ -> viewModel.deleteEntry(e) }
+            .setPositiveButton("Delete") { _, _ -> viewModel.deleteEntry(e); requireContext().toast("Entry deleted") }
             .setNegativeButton("Cancel", null)
             .show()
     }

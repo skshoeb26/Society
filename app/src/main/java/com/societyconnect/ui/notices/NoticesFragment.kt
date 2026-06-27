@@ -91,7 +91,7 @@ class NoticesFragment : Fragment() {
         AlertDialog.Builder(requireContext())
             .setTitle("Delete Notice")
             .setMessage("Delete \"${n.title}\"?")
-            .setPositiveButton("Delete") { _, _ -> viewModel.deleteNotice(n) }
+            .setPositiveButton("Delete") { _, _ -> viewModel.deleteNotice(n); requireContext().toast("Notice deleted") }
             .setNegativeButton("Cancel", null)
             .show()
     }

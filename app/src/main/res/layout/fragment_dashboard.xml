@@ -85,6 +85,8 @@
                     android:layout_height="130dp"
                     android:layout_weight="1"
                     android:layout_marginEnd="6dp"
+                    android:clickable="true"
+                    android:foreground="?attr/selectableItemBackground"
                     app:cardBackgroundColor="@color/card_maintenance"
                     app:cardCornerRadius="20dp"
                     app:cardElevation="4dp">
@@ -111,6 +113,8 @@
                     android:layout_height="130dp"
                     android:layout_weight="1"
                     android:layout_marginStart="6dp"
+                    android:clickable="true"
+                    android:foreground="?attr/selectableItemBackground"
                     app:cardBackgroundColor="@color/card_complaints"
                     app:cardCornerRadius="20dp"
                     app:cardElevation="4dp">
@@ -145,6 +149,8 @@
                     android:layout_height="130dp"
                     android:layout_weight="1"
                     android:layout_marginEnd="6dp"
+                    android:clickable="true"
+                    android:foreground="?attr/selectableItemBackground"
                     app:cardBackgroundColor="@color/card_notices"
                     app:cardCornerRadius="20dp"
                     app:cardElevation="4dp">
@@ -170,6 +176,8 @@
                     android:layout_height="130dp"
                     android:layout_weight="1"
                     android:layout_marginStart="6dp"
+                    android:clickable="true"
+                    android:foreground="?attr/selectableItemBackground"
                     app:cardBackgroundColor="@color/card_visitors"
                     app:cardCornerRadius="20dp"
                     app:cardElevation="4dp">
@@ -197,6 +205,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
                 android:layout_marginBottom="12dp"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackground"
                 app:cardBackgroundColor="@color/card_emergency"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="4dp">
