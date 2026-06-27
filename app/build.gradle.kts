@@ -123,6 +123,10 @@ dependencies {
     // Google Sign-In
     implementation("com.google.android.gms:play-services-auth:21.2.0")
 
+    // Play Billing — the society's own app subscription only. Maintenance
+    // dues collected from residents stay on UPI deep links (see Extensions.kt).
+    implementation("com.android.billingclient:billing-ktx:6.2.1")
+
     // QR code generation + scanning (visitor pre-approval flow) — on-device only, no cost
     implementation("com.google.zxing:core:3.5.3")
     implementation("com.journeyapps:zxing-android-embedded:4.3.0")

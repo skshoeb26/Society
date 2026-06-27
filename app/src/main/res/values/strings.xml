@@ -43,7 +43,7 @@
     <string name="generate_new_code">Generate New Code</string>
     <string name="subscription_active">Subscription Active</string>
     <string name="subscription_inactive">No Active Subscription</string>
-    <string name="activate_subscription">Activate Subscription</string>
+    <string name="activate_subscription">Subscribe</string>
     <string name="monthly_plan">Monthly Plan</string>
     <string name="yearly_plan">Yearly Plan</string>
 
