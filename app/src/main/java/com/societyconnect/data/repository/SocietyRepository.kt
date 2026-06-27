@@ -303,6 +303,39 @@ class SocietyRepository(private val societyId: String) {
         societyRef.collection("bookings").document(b.id).set(b).await()
     }
 
+    // ─── ASSETS ──────────────────────────────────────────────────────────────
+    val allAssets: LiveData<List<Asset>> =
+        FirestoreQueryLiveData(
+            societyRef.collection("assets").orderBy("name", Query.Direction.ASCENDING)
+        ) { it.toEntities(Asset::class.java) }
+
+    suspend fun addAsset(a: Asset) {
+        societyRef.collection("assets").add(a).await()
+    }
+    suspend fun deleteAsset(a: Asset) {
+        societyRef.collection("assets").document(a.id).delete().await()
+    }
+
+    // ─── SERVICE RECORDS ─────────────────────────────────────────────────────
+    val allServiceRecords: LiveData<List<ServiceRecord>> =
+        FirestoreQueryLiveData(
+            societyRef.collection("serviceRecords").orderBy("date", Query.Direction.DESCENDING)
+        ) { it.toEntities(ServiceRecord::class.java) }
+
+    fun getServiceRecordsByAsset(assetId: String): LiveData<List<ServiceRecord>> =
+        FirestoreQueryLiveData(
+            societyRef.collection("serviceRecords")
+                .whereEqualTo("assetId", assetId)
+                .orderBy("date", Query.Direction.DESCENDING)
+        ) { it.toEntities(ServiceRecord::class.java) }
+
+    suspend fun addServiceRecord(s: ServiceRecord) {
+        societyRef.collection("serviceRecords").add(s).await()
+    }
+    suspend fun deleteServiceRecord(s: ServiceRecord) {
+        societyRef.collection("serviceRecords").document(s.id).delete().await()
+    }
+
     // ─── EVENTS ──────────────────────────────────────────────────────────────
     val allEvents: LiveData<List<Event>> =
         FirestoreQueryLiveData(

@@ -35,6 +35,7 @@
     <color name="card_ledger">#0D9488</color>
     <color name="card_amenities">#7C3AED</color>
     <color name="card_events">#DB2777</color>
+    <color name="card_assets">#B45309</color>
 
     <!-- Light tint backgrounds (chips, badges) -->
     <color name="tint_green">#E2F3EA</color>

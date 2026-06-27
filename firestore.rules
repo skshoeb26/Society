@@ -163,6 +163,20 @@ service cloud.firestore {
         allow delete: if false;
       }
 
+      // ── assets (society infrastructure: lifts, pumps, generators, etc.) ──
+      // Only the secretary/committee curate the asset catalog and its
+      // AMC/warranty/vendor details.
+      match /assets/{assetId} {
+        allow read: if inSociety(societyId);
+        allow create, update, delete: if inSociety(societyId) && hasRole(['ADMIN', 'COMMITTEE']);
+      }
+
+      // ── serviceRecords (maintenance/service history for an asset) ────
+      match /serviceRecords/{recordId} {
+        allow read: if inSociety(societyId);
+        allow create, update, delete: if inSociety(societyId) && hasRole(['ADMIN', 'COMMITTEE']);
+      }
+
       // ── events ───────────────────────────────────────────────────────
       match /events/{eventId} {
         allow read: if inSociety(societyId);

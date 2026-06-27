@@ -143,6 +143,27 @@
     <string name="poll_open">Open</string>
     <string name="vote">Vote</string>
 
+    <!-- Assets &amp; Vendors -->
+    <string name="assets">Assets &amp; Vendors</string>
+    <string name="service_log">Service Log</string>
+    <string name="add_asset">Add Asset</string>
+    <string name="asset_name">Asset Name</string>
+    <string name="asset_location">Location (Optional)</string>
+    <string name="vendor_name">Vendor Name (Optional)</string>
+    <string name="vendor_phone">Vendor Phone (Optional)</string>
+    <string name="purchase_date">Purchase Date</string>
+    <string name="warranty_expiry">Warranty Expiry</string>
+    <string name="amc_expiry">AMC Expiry</string>
+    <string name="notes_optional">Notes (Optional)</string>
+    <string name="log_service">Log Service</string>
+    <string name="service_date">Service Date</string>
+    <string name="service_description">Work Description</string>
+    <string name="service_cost">Cost (₹)</string>
+    <string name="performed_by">Performed By (Optional)</string>
+    <string name="no_assets">No assets yet</string>
+    <string name="no_service_records">No service records yet</string>
+    <string name="not_set">Not set</string>
+
     <!-- Profile -->
     <string name="edit_profile">Edit Profile</string>
     <string name="edit_profile_subtitle">Update your details</string>

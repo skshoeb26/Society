@@ -49,4 +49,9 @@
         android:name="com.societyconnect.ui.events.EventsPollsFragment"
         android:label="Events &amp; Polls" />
 
+    <fragment
+        android:id="@+id/assetsFragment"
+        android:name="com.societyconnect.ui.assets.AssetsFragment"
+        android:label="Assets &amp; Vendors" />
+
 </navigation>

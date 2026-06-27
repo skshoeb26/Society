@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="wrap_content">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:padding="20dp">
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/add_asset" android:textColor="@color/text_primary"
+            android:textSize="18sp" android:textStyle="bold" android:layout_marginBottom="16dp"/>
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="Category" android:textColor="@color/text_secondary" android:textSize="13sp" android:layout_marginBottom="8dp"/>
+        <com.google.android.material.chip.ChipGroup android:id="@+id/chipGroupCategory"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp" app:singleSelection="true">
+            <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="🛗 Lift" android:tag="LIFT" android:checked="true" style="@style/Widget.Material3.Chip.Filter"/>
+            <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="🔌 Generator" android:tag="GENERATOR" style="@style/Widget.Material3.Chip.Filter"/>
+            <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="🚰 Pump" android:tag="PUMP" style="@style/Widget.Material3.Chip.Filter"/>
+            <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="🧯 Fire Safety" android:tag="FIRE_SAFETY" style="@style/Widget.Material3.Chip.Filter"/>
+            <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="📷 CCTV" android:tag="CCTV" style="@style/Widget.Material3.Chip.Filter"/>
+            <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="🛠 Other" android:tag="OTHER" style="@style/Widget.Material3.Chip.Filter"/>
+        </com.google.android.material.chip.ChipGroup>
+
+        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:hint="@string/asset_name" android:layout_marginBottom="12dp"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/etName"
+                android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textCapWords"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:hint="@string/asset_location" android:layout_marginBottom="12dp"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/etLocation"
+                android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textCapWords"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:hint="@string/vendor_name" android:layout_marginBottom="12dp"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/etVendorName"
+                android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textCapWords"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:hint="@string/vendor_phone" android:layout_marginBottom="16dp"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/etVendorPhone"
+                android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="phone"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/purchase_date" android:textColor="@color/text_secondary" android:textSize="13sp" android:layout_marginBottom="6dp"/>
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="14dp">
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnPickPurchase"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Pick Date" style="@style/Widget.Material3.Button.OutlinedButton"/>
+            <TextView android:id="@+id/tvPurchaseDate" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_marginStart="12dp" android:text="@string/not_set" android:textColor="@color/text_primary" android:textSize="14sp"/>
+        </LinearLayout>
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/warranty_expiry" android:textColor="@color/text_secondary" android:textSize="13sp" android:layout_marginBottom="6dp"/>
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="14dp">
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnPickWarranty"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Pick Date" style="@style/Widget.Material3.Button.OutlinedButton"/>
+            <TextView android:id="@+id/tvWarrantyDate" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_marginStart="12dp" android:text="@string/not_set" android:textColor="@color/text_primary" android:textSize="14sp"/>
+        </LinearLayout>
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/amc_expiry" android:textColor="@color/text_secondary" android:textSize="13sp" android:layout_marginBottom="6dp"/>
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="16dp">
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnPickAmc"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Pick Date" style="@style/Widget.Material3.Button.OutlinedButton"/>
+            <TextView android:id="@+id/tvAmcDate" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_marginStart="12dp" android:text="@string/not_set" android:textColor="@color/text_primary" android:textSize="14sp"/>
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:hint="@string/notes_optional" android:layout_marginBottom="16dp"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/etNotes"
+                android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textCapSentences"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnCancel"
+                android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                android:layout_marginEnd="8dp" android:text="@string/cancel" style="@style/Widget.Material3.Button.OutlinedButton"/>
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnSave"
+                android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                android:text="@string/save" android:backgroundTint="@color/card_assets"/>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

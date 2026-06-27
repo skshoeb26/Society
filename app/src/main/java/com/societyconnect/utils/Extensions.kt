@@ -159,6 +159,17 @@ fun getAmenityIcon(category: String): String {
     }
 }
 
+fun getAssetIcon(category: String): String {
+    return when (category) {
+        "LIFT" -> "🛗"
+        "GENERATOR" -> "🔌"
+        "PUMP" -> "🚰"
+        "FIRE_SAFETY" -> "🧯"
+        "CCTV" -> "📷"
+        else -> "🛠"
+    }
+}
+
 fun getRoleLabel(role: String): String {
     return when (role) {
         "ADMIN" -> "Secretary"

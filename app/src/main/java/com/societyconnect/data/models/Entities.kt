@@ -168,6 +168,39 @@ data class PollVote(
     override var id: String = ""
 }
 
+// ─── ASSET (society infrastructure: lifts, pumps, generators, etc.) ──
+data class Asset(
+    val name: String = "",
+    val category: String = "OTHER",      // LIFT, GENERATOR, PUMP, FIRE_SAFETY, CCTV, OTHER
+    val location: String = "",
+    val vendorName: String = "",
+    val vendorPhone: String = "",
+    val purchaseDate: Long? = null,
+    val warrantyExpiry: Long? = null,
+    val amcExpiry: Long? = null,
+    val notes: String = "",
+    val addedBy: String = "",
+    val createdAt: Long = System.currentTimeMillis()
+) : FirestoreEntity {
+    @get:Exclude @set:Exclude
+    override var id: String = ""
+}
+
+// ─── SERVICE RECORD (maintenance/service history entry for an asset) ──
+data class ServiceRecord(
+    val assetId: String = "",
+    val assetName: String = "",
+    val description: String = "",
+    val cost: Double = 0.0,
+    val performedBy: String = "",
+    val date: Long = System.currentTimeMillis(),
+    val loggedBy: String = "",
+    val createdAt: Long = System.currentTimeMillis()
+) : FirestoreEntity {
+    @get:Exclude @set:Exclude
+    override var id: String = ""
+}
+
 // ─── RECURRING MAINTENANCE CONFIG ─────────────────────────────────────
 // Secretary ek baar set karta hai, har mahine auto-generate hota hai.
 // Stored as a single fixed document (societies/{societyId}/recurringConfig/default).
