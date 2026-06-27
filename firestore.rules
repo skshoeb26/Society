@@ -177,6 +177,13 @@ service cloud.firestore {
         allow create, update, delete: if inSociety(societyId) && hasRole(['ADMIN', 'COMMITTEE']);
       }
 
+      // ── staff (society staff directory: watchman, sweeper, etc.) ─────
+      // Only the secretary/committee maintain the staff roster.
+      match /staff/{staffId} {
+        allow read: if inSociety(societyId);
+        allow create, update, delete: if inSociety(societyId) && hasRole(['ADMIN', 'COMMITTEE']);
+      }
+
       // ── events ───────────────────────────────────────────────────────
       match /events/{eventId} {
         allow read: if inSociety(societyId);

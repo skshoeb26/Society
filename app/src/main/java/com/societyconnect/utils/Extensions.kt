@@ -170,6 +170,19 @@ fun getAssetIcon(category: String): String {
     }
 }
 
+fun getStaffIcon(role: String): String {
+    return when (role) {
+        "WATCHMAN" -> "💂"
+        "SWEEPER" -> "🧹"
+        "ELECTRICIAN" -> "⚡"
+        "PLUMBER" -> "🔧"
+        "GARDENER" -> "🌳"
+        "COOK" -> "🍳"
+        "DRIVER" -> "🚗"
+        else -> "👤"
+    }
+}
+
 fun getRoleLabel(role: String): String {
     return when (role) {
         "ADMIN" -> "Secretary"

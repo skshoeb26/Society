@@ -201,6 +201,21 @@ data class ServiceRecord(
     override var id: String = ""
 }
 
+// ─── STAFF MEMBER (society staff: watchman, sweeper, electrician, etc.) ──
+data class StaffMember(
+    val name: String = "",
+    val role: String = "WATCHMAN",   // WATCHMAN, SWEEPER, ELECTRICIAN, PLUMBER, GARDENER, COOK, DRIVER, OTHER
+    val phone: String = "",
+    val shiftTiming: String = "",
+    val joiningDate: Long? = null,
+    val address: String = "",
+    val addedBy: String = "",
+    val createdAt: Long = System.currentTimeMillis()
+) : FirestoreEntity {
+    @get:Exclude @set:Exclude
+    override var id: String = ""
+}
+
 // ─── RECURRING MAINTENANCE CONFIG ─────────────────────────────────────
 // Secretary ek baar set karta hai, har mahine auto-generate hota hai.
 // Stored as a single fixed document (societies/{societyId}/recurringConfig/default).

@@ -164,6 +164,16 @@
     <string name="no_service_records">No service records yet</string>
     <string name="not_set">Not set</string>
 
+    <!-- Staff -->
+    <string name="staff">Staff</string>
+    <string name="add_staff">Add Staff</string>
+    <string name="staff_name">Staff Name</string>
+    <string name="staff_phone">Phone Number</string>
+    <string name="shift_timing">Shift Timing (Optional)</string>
+    <string name="joining_date">Joining Date (Optional)</string>
+    <string name="staff_address">Address (Optional)</string>
+    <string name="no_staff">No staff added yet</string>
+
     <!-- Profile -->
     <string name="edit_profile">Edit Profile</string>
     <string name="edit_profile_subtitle">Update your details</string>

@@ -336,6 +336,19 @@ class SocietyRepository(private val societyId: String) {
         societyRef.collection("serviceRecords").document(s.id).delete().await()
     }
 
+    // ─── STAFF ───────────────────────────────────────────────────────────────
+    val allStaff: LiveData<List<StaffMember>> =
+        FirestoreQueryLiveData(
+            societyRef.collection("staff").orderBy("name", Query.Direction.ASCENDING)
+        ) { it.toEntities(StaffMember::class.java) }
+
+    suspend fun addStaff(s: StaffMember) {
+        societyRef.collection("staff").add(s).await()
+    }
+    suspend fun deleteStaff(s: StaffMember) {
+        societyRef.collection("staff").document(s.id).delete().await()
+    }
+
     // ─── EVENTS ──────────────────────────────────────────────────────────────
     val allEvents: LiveData<List<Event>> =
         FirestoreQueryLiveData(
